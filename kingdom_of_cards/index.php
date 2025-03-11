@@ -8,7 +8,7 @@
 <body>
     <div class="intro-container">
         <div class="intro-content">
-            <h1 class="intro-title">👑 Kingdom of Cards 👑</h1>
+            <h1 class="intro-title"> Kingdom of Cards </h1>
             <p>Un monde où seuls les meilleurs duellistes règnent...</p>
             <button class="start-button" onclick="startGame()">Appuyer pour continuer</button>
         </div>
