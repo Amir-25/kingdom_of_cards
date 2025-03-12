@@ -13,7 +13,6 @@
             <button class="start-button" onclick="startGame()">Appuyer pour continuer</button>
         </div>
     </div>
-    <!--
         <audio id="audio-player" loop autoplay>
             <source src="assets/background2.mp3" type="audio/mpeg">
             Votre navigateur ne supporte pas l'audio.
@@ -38,7 +37,7 @@
                 });
             });
         </script>
-    -->
+    
 
     <script>
         function startGame() {
