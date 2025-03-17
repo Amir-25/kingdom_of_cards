@@ -2,10 +2,11 @@
 session_start();
 require_once "../config.php";
 
-// Inscription
-function registerUser() {
-    global $pdo;
+// Vérifier la méthode de la requête
+$request_method = $_SERVER["REQUEST_METHOD"];
 
+// Inscription d'un nouvel utilisateur
+if ($request_method === "POST" && isset($_GET["register"])) {
     $data = json_decode(file_get_contents("php://input"), true);
     $username = trim($data["username"]);
     $password = trim($data["password"]);
@@ -13,12 +14,12 @@ function registerUser() {
 
     if (empty($username) || empty($password) || empty($confirm_password)) {
         echo json_encode(["error" => "Tous les champs sont requis."]);
-        return;
+        exit;
     }
-    
+
     if ($password !== $confirm_password) {
         echo json_encode(["error" => "Les mots de passe ne correspondent pas."]);
-        return;
+        exit;
     }
 
     // Vérifier si l'utilisateur existe déjà
@@ -26,23 +27,36 @@ function registerUser() {
     $stmt->execute([$username]);
     if ($stmt->fetch()) {
         echo json_encode(["error" => "Ce nom d'utilisateur est déjà pris."]);
-        return;
+        exit;
     }
 
     // Hacher le mot de passe et enregistrer l'utilisateur
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
     if ($stmt->execute([$username, $hashed_password])) {
-        echo json_encode(["success" => "Inscription réussie."]);
+        $user_id = $pdo->lastInsertId();
+
+        // 🔥 Ajouter les 10 cartes de départ dans inventory
+        $starter_cards = [1,2,3,4,5,6,7,8,9,10]; // IDs des cartes de base
+        $stmt = $pdo->prepare("INSERT INTO inventory (user_id, card_id) VALUES (?, ?)");
+        foreach ($starter_cards as $card_id) {
+            $stmt->execute([$user_id, $card_id]);
+        }
+
+        // 🔥 Créer une entrée vide dans deck pour forcer le joueur à choisir 10 cartes
+        $stmt = $pdo->prepare("DELETE FROM deck WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+
+        echo json_encode(["success" => "Inscription réussie ! Inventaire créé."]);
     } else {
         echo json_encode(["error" => "Erreur lors de l'inscription."]);
     }
+    exit;
 }
 
-// Connexion
-function loginUser() {
-    global $pdo;
 
+// Connexion d'un utilisateur
+if ($request_method === "POST" && isset($_GET["login"])) {
     $data = json_decode(file_get_contents("php://input"), true);
     $username = trim($data["username"]);
     $password = trim($data["password"]);
@@ -58,10 +72,15 @@ function loginUser() {
     } else {
         echo json_encode(["error" => "Nom d'utilisateur ou mot de passe incorrect."]);
     }
+    exit;
 }
 
-// Déconnexion
-function logoutUser() {
+// Déconnexion de l'utilisateur
+if ($request_method === "GET" && isset($_GET["logout"])) {
     session_destroy();
     echo json_encode(["success" => "Déconnexion réussie."]);
+    exit;
 }
+
+// Si aucune action n'est reconnue
+echo json_encode(["error" => "Requête invalide."]);

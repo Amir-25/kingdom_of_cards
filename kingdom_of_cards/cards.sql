@@ -1,80 +1,31 @@
--- Création de la table des cartes
-CREATE TABLE cartes (
+CREATE TABLE cards (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    nom VARCHAR(100) NOT NULL,
-    rarete ENUM('Commune', 'Rare', 'Très Rare', 'Épique', 'Légendaire', 'Mythique') NOT NULL,
-    attaque INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    type ENUM('Monstre', 'Fusion') NOT NULL,
+    attack INT NOT NULL,
     defense INT NOT NULL,
-    effet TEXT DEFAULT NULL,
-    fusionnable BOOLEAN DEFAULT FALSE,
-    image_path VARCHAR(255) NOT NULL
+    ability TEXT DEFAULT NULL,
+    image VARCHAR(255) NOT NULL,
+    fusion_card_1 INT DEFAULT NULL,  -- ID de la première carte nécessaire pour fusion
+    fusion_card_2 INT DEFAULT NULL -- ID de la carte obtenue après fusion
 );
 
--- Création de la table des fusions
-CREATE TABLE fusions (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    id_carte_resultat INT NOT NULL,
-    id_carte_1 INT NOT NULL,
-    id_carte_2 INT NOT NULL,
-    FOREIGN KEY (id_carte_resultat) REFERENCES cartes(id),
-    FOREIGN KEY (id_carte_1) REFERENCES cartes(id),
-    FOREIGN KEY (id_carte_2) REFERENCES cartes(id)
-);
+INSERT INTO cards (name, type, attack, defense, image) VALUES
+('Gobelin Pyromane', 'Monstre', 1200, 800, 'assets/Cartes/gobelin_pyromane.jpg'),
+('Serpent des Sables', 'Monstre', 1000, 900, 'assets/Cartes/serpent_des_sables.jpg'),
+('Golem Mécanique', 'Monstre', 1600, 2000, 'assets/Cartes/golem_mecanique.jpg'),
+('Chimère sanglante', 'Monstre', 1800, 1200, 'assets/Cartes/chimere_sanglante.jpg'),
+('Gardien Spectral', 'Monstre', 1400, 1700, 'assets/Cartes/gardien_spectral.jpg'),
+('Dragon du Néant', 'Monstre', 2000, 1500, 'assets/Cartes/dragon_du_neant.jpg'),
+('Chevalier de la Faille', 'Monstre', 1500, 1300, 'assets/Cartes/chevalier_de_la_faille.jpg'),
+('Roi des Profondeurs', 'Monstre', 1700, 1800, 'assets/Cartes/roi_des_profondeurs.jpg'),
+('Titan du Néant', 'Monstre', 1900, 1900, 'assets/Cartes/titan_du_neant.jpg'),
+('Seigneur du Chaos Abyssal', 'Monstre', 2100, 1600, 'assets/Cartes/seigneur_du_chaos_abyssal.jpg');
 
--- Insertion des cartes normales
-INSERT INTO cartes (nom, rarete, attaque, defense, effet, fusionnable, image_path)
-VALUES
-('Gobelin Pyromane', 'Commune', 1400, 1000, NULL, FALSE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/1.Gobelin Pyromane.png'),
-('Serpent des Sables', 'Commune', 1200, 1600, NULL, FALSE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/2.Serpent des Sables.png'),
-('Golem Mécanique', 'Commune', 1700, 800, NULL, TRUE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/3.Golem Mécanique.png'),
-('Chimère Sanglante', 'Rare', 1800, 1300, NULL, TRUE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/4.Chimère sanglante.png'),
-('Gardien Spectral', 'Rare', 1500, 2000, NULL, TRUE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/5.Gardien Spectral.png'),
-('Dragon du Néant', 'Très Rare', 2000, 1800, 'Voracité du Néant : gagne +500 ATK quand il détruit un monstre', TRUE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/6.Dragon du Néant.png'),
-('Chevalier de la Faille', 'Très Rare', 1900, 2100, 'Rupture Dimensionnelle : bannit les monstres qu’il détruit', TRUE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/7.Chevalier de la Faille.png'),
-('Roi des Profondeurs', 'Épique', 2400, 2000, 'Marée Déferlante : -300 ATK aux ennemis', TRUE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/8.Roi des Profondeurs.png'),
-('Titan du Néant', 'Épique', 2500, 2200, 'Dévoreur d’Âmes : régénère 500 PV en détruisant un monstre', TRUE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/9.Titan du Néant.png'),
-('Seigneur du Chaos Abyssal', 'Légendaire', 2800, 2500, 'Marque du Néant : si une carte marquée est détruite, son propriétaire perd 500 PV', TRUE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/10.Seigneur du Chaos Abyssal.png');
+INSERT INTO cards (name, type, attack, defense, image, fusion_card_1, fusion_card_2) VALUES
+('Béhémoth des Abysses', 'Fusion', 2600, 2300, 'assets/Cartes/behemoth_des_abysses.jpg', 8, 9),
+('Golem Apocalypse', 'Fusion', 3000, 2700, 'assets/Cartes/golem_apocalypse.jpg', 3, 5),
+('Dragon Eclipse Infernale', 'Fusion', 3200, 2900, 'assets/Cartes/dragon_eclipse_infernale.jpg', 6, 10),
+('Roi de la Destruction Totale', 'Fusion', 3400, 3000, 'assets/Cartes/roi_destruction_totale.jpg', 4, 7),
+('Chaos Céleste', 'Fusion', 4000, 3500, 'assets/Cartes/chaos_celeste.jpg', 13, 14);
 
--- Insertion des cartes fusionnées
-INSERT INTO cartes (nom, rarete, attaque, defense, effet, fusionnable, image_path)
-VALUES
-('Béhémoth des Abysses', 'Épique', 3200, 2800, 'Colère des Profondeurs : peut attaquer une 2ème fois si destruction', FALSE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/11.Fusion 8-9.Béhémoth des Abysses.png'),
-('Golem d’Apocalypse', 'Épique', 3000, 3000, 'Indestructible : revient avec 1500 DEF après destruction', FALSE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/12.Fusion 3-5.Golem d’Apocalypse.png'),
-('Dragon Éclipse Infernale', 'Légendaire', 3500, 2700, 'Flammes d’Éclipse : bannit les monstres détruits', FALSE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/13.Fusion 6-10.Dragon Éclipse Infernale.png'),
-('Roi de la Destruction Totale', 'Légendaire', 3400, 2900, 'Onde de Ruine : inflige 200 dégâts aux ennemis et 100 aux alliés', FALSE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/14.Fusion 4-7.Roi de la Destruction Totale.png'),
-('Dieu du Chaos Céleste', 'Mythique', 4500, 4000, 'Jugement du Chaos : inflige 300 dégâts par carte ennemie en jeu à chaque tour', FALSE, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/15.Fusion+ 13-14.Chaos Céleste.png');
-
--- Insertion des liens de fusion
-INSERT INTO fusions (id_carte_resultat, id_carte_1, id_carte_2)
-VALUES
-((SELECT id FROM cartes WHERE nom = 'Béhémoth des Abysses'),
- (SELECT id FROM cartes WHERE nom = 'Roi des Profondeurs'),
- (SELECT id FROM cartes WHERE nom = 'Titan du Néant')),
-
-((SELECT id FROM cartes WHERE nom = 'Golem d’Apocalypse'),
- (SELECT id FROM cartes WHERE nom = 'Golem Mécanique'),
- (SELECT id FROM cartes WHERE nom = 'Gardien Spectral')),
-
-((SELECT id FROM cartes WHERE nom = 'Dragon Éclipse Infernale'),
- (SELECT id FROM cartes WHERE nom = 'Dragon du Néant'),
- (SELECT id FROM cartes WHERE nom = 'Seigneur du Chaos Abyssal')),
-
-((SELECT id FROM cartes WHERE nom = 'Roi de la Destruction Totale'),
- (SELECT id FROM cartes WHERE nom = 'Chevalier de la Faille'),
- (SELECT id FROM cartes WHERE nom = 'Chimère Sanglante')),
-
-((SELECT id FROM cartes WHERE nom = 'Dieu du Chaos Céleste'),
- (SELECT id FROM cartes WHERE nom = 'Dragon Éclipse Infernale'),
- (SELECT id FROM cartes WHERE nom = 'Roi de la Destruction Totale'));
-
-
-
--- Création de la table des cartes des joueurs
-CREATE TABLE joueur_cartes (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    id_joueur INT NOT NULL,
-    id_carte INT NOT NULL,
-    quantite INT NOT NULL DEFAULT 1,
-    FOREIGN KEY (id_joueur) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_carte) REFERENCES cartes(id) ON DELETE CASCADE
-);
