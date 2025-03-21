@@ -235,43 +235,63 @@ a:hover {
     background: darkred;
     box-shadow: 0 0 20px darkred;
 }
-
+/* ===================== Inventaire ====================================*/
+/*
 .inventory-container {
-    text-align: center;
     background: url('assets/inventory-bg.jpg') no-repeat center center fixed;
     background-size: cover;
-    color: white;
+    height:auto;
+    text-align: contain;
 }
 
 /* Zone du deck */
 .deck-slots {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(40, 40, 40, 0.9));
+    display: grid;
+    grid-template-columns: repeat(5, auto); 
+    grid-template-rows: repeat(2, auto);
+    gap: 10px;
+    position: relative;
+    width: fit-content; 
+    margin: 20px auto;
+    padding: 20px 30px;
+    border-radius: 20px; 
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
 }
 
+
+
 .slot {
-    width: 100px;
-    height: 175px;
-    border: 2px dashed #ffd700;
+    width: 120px;
+    height: 180px;
+    border: 3px dashed rgba(255, 215, 0, 0.6);
+    border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.5);
 }
+
+/* Effet lorsqu'une carte approche */
+.slot.highlight {
+    opacity: 1;
+    border: 3px solid gold;
+    box-shadow: 0px 0px 15px rgba(255, 215, 0, 0.7);
+}
+
 
 /* Cartes de l'inventaire */
 .card-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 30px;
     justify-content: center;
+    margin-top: 50px;
+    padding: 20px;
 }
 
 .card {
-    width: 100px;
-    height: 175px;
+    width: 200px;
+    height: 300px;
     border-radius: 10px;
     box-shadow: 0 0 10px gold;
     cursor: grab;
@@ -282,11 +302,16 @@ a:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 10px;
 }
 
 .card:hover {
     transform: scale(1.1);
 }
+
+
+
+
 
 
 
