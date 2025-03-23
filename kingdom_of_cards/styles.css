@@ -1,0 +1,318 @@
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&display=swap');
+
+body {
+    background: url('assets/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Pirata One', cursive;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #ffd700;
+}
+
+h2 {
+    color: #ffd700;
+    font-size: 28px;
+    text-shadow: 2px 2px 5px rgba(255, 215, 0, 0.8);
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 2px solid #ffd700;
+    border-radius: 5px;
+    font-size: 16px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+}
+
+button {
+    background: #ffd700;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #ffae00;
+    box-shadow: 0 0 10px #ffae00;
+}
+
+a {
+    color: #ffd700;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    text-shadow: 0 0 10px #ffd700;
+}
+
+.audio-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ffd700;
+    display: flex;
+    align-items: center;
+}
+
+.audio-container label {
+    color: #ffd700;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+#audio-player {
+    display: none;
+}
+
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100px;
+    height: 5px;
+    background: #ffd700;
+    border-radius: 5px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.volume-slider:hover {
+    box-shadow: 0 0 10px #ffd700;
+}
+
+/* ===================== */
+/* 🔥 Page d'accueil 🔥 */
+/* ===================== */
+
+.intro-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('assets/intro-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+}
+
+.intro-content {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 40px;
+    border: 3px solid #ffd700;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #ffd700;
+    animation: fadeIn 2s ease-in-out;
+}
+
+.intro-title {
+    font-size: 36px;
+    color: #ffd700;
+    text-shadow: 3px 3px 10px rgba(255, 215, 0, 0.8);
+    margin-bottom: 20px;
+}
+
+.start-button {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    background: #ffd700;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px #ffd700;
+    animation: pulse 1.5s infinite alternate;
+}
+
+.start-button:hover {
+    background: #ffae00;
+    box-shadow: 0 0 20px #ffae00;
+    transform: scale(1.1);
+}
+
+/* Animation de fondu */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Animation de pulsation */
+@keyframes pulse {
+    from { transform: scale(1); box-shadow: 0 0 10px #ffd700; }
+    to { transform: scale(1.05); box-shadow: 0 0 20px #ffd700; }
+}
+
+/* ===================== */
+/* 🔥 Page Home 🔥 */
+/* ===================== */
+
+.home-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: url('assets/intro-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    text-align: center;
+}
+
+.home-title {
+    font-size: 40px;
+    color: #ffd700;
+    text-shadow: 3px 3px 10px rgba(255, 215, 0, 0.8);
+    margin-bottom: 30px;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #ffd700;
+}
+
+.menu-button {
+    font-size: 22px;
+    font-weight: bold;
+    color: black;
+    background: #ffd700;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px #ffd700;
+    width: 300px;
+}
+
+.menu-button:hover {
+    background: #ffae00;
+    box-shadow: 0 0 20px #ffae00;
+    transform: scale(1.1);
+}
+
+.logout-button {
+    background: red;
+    color: white;
+    box-shadow: 0 0 10px red;
+}
+
+.logout-button:hover {
+    background: darkred;
+    box-shadow: 0 0 20px darkred;
+}
+/* ===================== Inventaire ====================================*/
+/*
+.inventory-container {
+    background: url('assets/inventory-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height:auto;
+    text-align: contain;
+}
+
+/* Zone du deck */
+.deck-slots {
+    background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(40, 40, 40, 0.9));
+    display: grid;
+    grid-template-columns: repeat(5, auto); 
+    grid-template-rows: repeat(2, auto);
+    gap: 10px;
+    position: relative;
+    width: fit-content; 
+    margin: 20px auto;
+    padding: 20px 30px;
+    border-radius: 20px; 
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+
+
+.slot {
+    width: 120px;
+    height: 180px;
+    border: 3px dashed rgba(255, 215, 0, 0.6);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Effet lorsqu'une carte approche */
+.slot.highlight {
+    opacity: 1;
+    border: 3px solid gold;
+    box-shadow: 0px 0px 15px rgba(255, 215, 0, 0.7);
+}
+
+
+/* Cartes de l'inventaire */
+.card-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    margin-top: 50px;
+    padding: 20px;
+}
+
+.card {
+    width: 200px;
+    height: 300px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px gold;
+    cursor: grab;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.card:hover {
+    transform: scale(1.1);
+}
+
+
+
+
+
+
+
+
