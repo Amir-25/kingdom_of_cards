@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 revealBox.style.display = "block";
                 revealBox.classList.remove("shine-effect");
 
-                // ✅ Sauvegarde de la carte tirée avec debug
+                // Sauvegarde de la carte tirée avec debug
                 fetch("../api/save_card.php", {
                     method: "POST",
                     headers: {
