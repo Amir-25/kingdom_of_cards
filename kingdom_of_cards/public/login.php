@@ -18,6 +18,8 @@
             <button type="submit">Se connecter</button>
         </form>
         <p>Pas encore de compte ? <a href="register.php">Rejoins le Royaume</a></p>
+        <p><a href="forgot_password.php">Mot de passe oublié ?</a></p>
+
     </div>
 
     <audio id="audio-player" loop autoplay>
@@ -47,14 +49,20 @@
                 credentials: "same-origin"
             });
 
-            const result = await response.json();
-
-            if (result.success) {
-                window.location.href = "home.php";
-            } else {
-                alert(result.error || "Erreur inconnue");
+            const text = await response.text();
+            console.log("Réponse serveur:", text);
+            try {
+                const result = JSON.parse(text);
+                if (result.success) {
+                    window.location.href = "home.php";
+                } else {
+                    alert(result.error || "Erreur inconnue");
+                }
+            } catch (e) {
+                alert("Erreur de réponse du serveur.");
             }
         });
     </script>
+
 </body>
 </html>
