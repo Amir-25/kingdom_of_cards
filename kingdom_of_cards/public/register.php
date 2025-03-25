@@ -1,36 +1,3 @@
-<?php
-require_once "../config.php";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST["username"]);
-    $password = trim($_POST["password"]);
-    $confirm_password = trim($_POST["confirm_password"]);
-
-    if (empty($username) || empty($password) || empty($confirm_password)) {
-        $error = "Tous les champs sont requis.";
-    } elseif ($password !== $confirm_password) {
-        $error = "Les mots de passe ne correspondent pas.";
-    } else {
-        // Vérifier si le nom d'utilisateur est déjà pris
-        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
-        $stmt->execute([$username]);
-        if ($stmt->fetch()) {
-            $error = "Ce nom d'utilisateur est déjà pris.";
-        } else {
-            // Hachage du mot de passe et insertion
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-            if ($stmt->execute([$username, $hashed_password])) {
-                header("Location: login.php");
-                exit;
-            } else {
-                $error = "Erreur lors de l'inscription.";
-            }
-        }
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -41,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="container">
         <h2>Rejoignez le Royaume des Cartes</h2>
-        <form method="post">
+        <form id="register-form" method="post">
             <label>Nom d'utilisateur :</label>
             <input type="text" name="username" required>
             
@@ -57,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>Déjà un compte ? <a href="login.php">Connecte-toi ici</a></p>
     </div>
     <audio id="audio-player" loop autoplay>
-        <source src="../assets/background.mp3" type="audio/mpeg">
+        <source src="../assets/register.mp3" type="audio/mpeg">
         Votre navigateur ne supporte pas l'audio.
     </audio>
 
@@ -67,48 +34,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <script>
-
-        document.getElementById("register-form").addEventListener("submit", function(event) {
+        document.getElementById("register-form").addEventListener("submit", async function (event) {
             event.preventDefault();
-        
+
             const formData = {
                 username: document.querySelector("input[name='username']").value,
                 password: document.querySelector("input[name='password']").value,
                 confirm_password: document.querySelector("input[name='confirm_password']").value
             };
 
-            fetch("/api/router.php/register", {
+            const response = await fetch("../api/router.php/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = "login.php";
-                } else {
-                    alert(data.error);
-                }
+                body: JSON.stringify(formData),
+                credentials: "same-origin"
             });
+
+            const result = await response.json();
+            alert(result.success || result.error);
+
+            if (result.success) {
+                window.location.href = "login.php";
+            }
         });
-
-/*        document.addEventListener("DOMContentLoaded", function () {
-            const audio = document.getElementById("audio-player");
-            const volumeSlider = document.getElementById("volume");
-
-            // Play audio
-            audio.volume = 0.5; // Volume par défaut
-            audio.play().catch(error => console.log("Autoplay bloqué par le navigateur :", error));
-
-            // Modifier le volume
-            volumeSlider.addEventListener("input", function () {
-                audio.volume = this.value;
-            });
-        }); */
-
     </script>
-    <script src="audio.js"> 
-    </script>
+    <script src="audio.js"></script>
 </body>
 </html>
-

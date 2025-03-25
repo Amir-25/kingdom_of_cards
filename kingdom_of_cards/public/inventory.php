@@ -1,8 +1,3 @@
-<?php
-
-
-?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -72,6 +67,18 @@
         </div>
     </div>
     
+    <audio id="audio-player" loop autoplay>
+        <source src="../assets/inventory.mp3" type="audio/mpeg">
+        Votre navigateur ne supporte pas l'audio.
+    </audio>
+
+    <div class="audio-container">
+        <label for="volume">🎵 Volume :</label>
+        <input type="range" id="volume" class="volume-slider" min="0" max="1" step="0.1" value="0.5">
+    </div>
+
+    <script src="audio.js"></script>    
+
 </body>
 
 <script>

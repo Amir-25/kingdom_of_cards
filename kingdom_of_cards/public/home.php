@@ -21,12 +21,15 @@ if (!isset($_SESSION["user_id"])) {
             <button class="menu-button" onclick="location.href='matchmaking.php'">🎴 Trouver un adversaire</button>
             <button class="menu-button" onclick="location.href='solo_mode.php'">⚔️ Mode Solo</button>
             <button class="menu-button" onclick="location.href='inventory.php'">🃏 Préparer Inventaire</button>
+
             <button class="menu-button" onclick="location.href='shop.php'">💰 Magasin</button>
-            <button class="menu-button logout-button" onclick="location.href='logout.php'">🚪 Se Déconnecter</button>
+            <!-- On retire le onclick pour la déconnexion et on ajoute un id -->
+            <button class="menu-button logout-button" id="logout-btn">🚪 Se Déconnecter</button>
+
         </div>
     </div>
     <audio id="audio-player" loop autoplay>
-        <source src="../assets/background.mp3" type="audio/mpeg">
+        <source src="../assets/home.mp3" type="audio/mpeg">
         Votre navigateur ne supporte pas l'audio.
     </audio>
 
@@ -36,31 +39,18 @@ if (!isset($_SESSION["user_id"])) {
     </div>
 
     <script>
-
+        // On utilise un chemin relatif pour pointer vers l'API, vu que ton projet est dans un sous-dossier
         document.getElementById("logout-btn").addEventListener("click", function() {
-                fetch("/api/router.php/logout")
-                    .then(response => response.json())
-                    .then(data => {
-                        alert(data.success);
-                        window.location.href = "login.php";
-                    });
-        });
-
-        /*document.addEventListener("DOMContentLoaded", function () {
-            const audio = document.getElementById("audio-player");
-            const volumeSlider = document.getElementById("volume");
-
-            // Play audio
-            audio.volume = 0.5; // Volume par défaut
-            audio.play().catch(error => console.log("Autoplay bloqué par le navigateur :", error));
-
-            // Modifier le volume
-            volumeSlider.addEventListener("input", function () {
-             audio.volume = this.value;
+            fetch("../api/router.php/logout", {
+                credentials: "same-origin"
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.success);
+                window.location.href = "login.php";
             });
-        }); */
+        });
     </script>
-        <script src="audio.js"> 
-    </script>
+    <script src="audio.js"></script>
 </body>
 </html>
