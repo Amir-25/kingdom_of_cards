@@ -4,6 +4,51 @@
     <meta charset="UTF-8">
     <title>Connexion - Kingdom of Cards</title>
     <link rel="stylesheet" href="../styles.css">
+
+    <!-- ce bout doit etre placer dans le css une fois qu'il est bien organisé-->
+
+    <style>
+    .remove-button-container, .save-button-container, .back-button-container {
+        text-align: right;
+        margin: 20px;
+    }
+
+    button {
+        width: 200px; /* Définit une largeur fixe pour tous les boutons */
+        padding: 8px 12px;
+        font-size: 14px;
+        cursor: pointer;
+        background-color: rgba(255, 215, 0, 0.6);
+        color: white;
+        border: 2px solid gold;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        box-shadow: none;
+    }
+
+    #remove-card:disabled {
+        background-color: #ccc;
+        color: #666;
+        border: 2px solid #aaa;
+        cursor: not-allowed;
+    }
+
+    #remove-card:hover:not(:disabled), #save-deck:hover, .back-button:hover {
+        background-color: gold;
+        color: black;
+        box-shadow: 0 0 10px gold;
+    }
+
+    .selected-slot {
+        border: 3px solid gold;
+        border-radius: 8px;
+        transform: scale(1.05);
+        transition: all 0.3s ease;
+        box-shadow: 0 0 20px gold;
+    }
+</style>
+
+
 </head>
 <body>
     <div class="deck-slots">
@@ -18,6 +63,19 @@
          <div class="slot"></div>
          <div class="slot"></div>
     </div>
+
+    <div class="remove-button-container">
+        <button id="remove-card" disabled>Retirer la carte</button>
+    </div>
+
+    <div class="save-button-container">
+        <button id="save-deck">Sauvegarder mon deck</button>
+    </div>
+
+    <div class="back-button-container">
+        <button onclick="window.location.href='home.php'" class="back-button">Retour à l'accueil</button>
+    </div>
+
 
     <div class="card-list">
         <div class="card">
@@ -142,6 +200,102 @@ document.addEventListener("DOMContentLoaded", function () {
             window.scrollBy(0, scrollSpeed);
         }
     }
+
+    let selectedSlot = null;
+
+document.querySelectorAll(".slot").forEach(slot => {
+    slot.addEventListener("click", () => {
+        // Retire la sélection des autres slots
+        document.querySelectorAll(".slot").forEach(s => s.classList.remove("selected-slot"));
+
+        // si ce slot contient une carte
+        if (slot.firstChild) {
+            selectedSlot = slot;
+            slot.classList.add("selected-slot");
+            document.getElementById("remove-card").disabled = false;
+        } else {
+            selectedSlot = null;
+            document.getElementById("remove-card").disabled = true;
+        }
+    });
+});
+
+document.getElementById("remove-card").addEventListener("click", () => {
+    if (selectedSlot && selectedSlot.firstChild) {
+        const card = selectedSlot.querySelector(".card");
+        const imgSrc = card.querySelector("img").getAttribute("src");
+        const altText = card.querySelector("img").getAttribute("alt");
+
+        // creeer une nouvelle carte dans la liste
+        const newCard = document.createElement("div");
+        newCard.classList.add("card");
+        newCard.innerHTML = `<img src="${imgSrc}" alt="${altText}">`;
+        document.querySelector(".card-list").appendChild(newCard);
+
+        newCard.draggable = true;
+        newCard.addEventListener("dragstart", function (e) {
+            e.dataTransfer.setData("text/plain", newCard.outerHTML);
+        });
+
+        // vider le slot
+        selectedSlot.innerHTML = "";
+        selectedSlot.classList.remove("selected-slot");
+        document.getElementById("remove-card").disabled = true;
+    }
+});
+
+document.getElementById("save-deck").addEventListener("click", async () => {
+    const slots = document.querySelectorAll(".slot");
+    const deck = [];
+
+    slots.forEach((slot, index) => {
+        const img = slot.querySelector("img");
+        if (img) {
+            const src = img.getAttribute("src");
+            deck.push({ src: src, position: index });
+        }
+    });
+
+    const response = await fetch("../api/router.php/save_deck", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ deck: deck }),
+        credentials: "same-origin"
+    });
+
+    const result = await response.json();
+    alert(result.success || result.error);
+});
+
+// charger le deck automatiquement
+fetch("../api/router.php/load_deck", {
+    method: "GET",
+    credentials: "same-origin"
+})
+.then(response => response.json())
+.then(data => {
+    if (data.deck) {
+        const slots = document.querySelectorAll(".slot");
+
+        data.deck.forEach((card, index) => {
+            if (slots[index]) {
+                const newCard = document.createElement("div");
+                newCard.classList.add("card");
+                newCard.innerHTML = `<img src="../${card.image}" alt="${card.name}">`;
+
+                newCard.style.width = "120px";
+                newCard.style.height = "180px";
+                newCard.style.cursor = "default";
+
+                slots[index].innerHTML = "";
+                slots[index].appendChild(newCard);
+            }
+        });
+    }
+});
+
 });
 </script>
 
