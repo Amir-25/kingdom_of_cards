@@ -21,6 +21,7 @@ if (!isset($_SESSION["user_id"])) {
             <button class="menu-button" onclick="location.href='matchmaking.php'">🎴 Trouver un adversaire</button>
             <button class="menu-button" onclick="location.href='solo_mode.php'">⚔️ Mode Solo</button>
             <button class="menu-button" onclick="location.href='inventory.php'">🃏 Préparer Inventaire</button>
+            <button class="menu-button" onclick="location.href='shop.php'">💰 Magasin</button>
             <button class="menu-button logout-button" onclick="location.href='logout.php'">🚪 Se Déconnecter</button>
         </div>
     </div>

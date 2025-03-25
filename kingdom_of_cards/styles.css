@@ -308,6 +308,367 @@ a:hover {
 .card:hover {
     transform: scale(1.1);
 }
+/**********************SHOP*********************/
+
+/* ====== PAGE SHOP ====== */
+.shop-page {
+    background-image: url('assets/shop-background.webp'); /* ou ton image actuelle */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    color: black;
+}
+
+/* ====== BARRE SHOP ====== */
+.shop-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(30, 30, 30, 0.85);
+    padding: 20px 40px;
+    width: 100%;
+    box-sizing: border-box;
+
+    border-bottom: 3px solid #ffd700; /* fine ligne jaune en bas */
+    border-top: 3px solid #ffd700; /* facultatif */
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.3);
+}
+.username {
+    font-family: 'Pirata One', cursive;
+    color: #ffd700;
+    font-size: 26px;
+    text-shadow: 2px 2px 5px rgba(255, 215, 0, 0.6);
+}
+
+
+
+
+.shop-title {
+    font-family: 'Pirata One', cursive;
+    font-size: 36px;
+    color: #ffd700;
+    text-shadow: 2px 2px 6px rgba(255, 215, 0, 0.8);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 30px; /* 👈 plus de respiration */
+    
+}
+
+
+.currency {
+    font-family: 'Pirata One', cursive; /* police stylée */
+    background-color: #666;
+    color: #f0d841;
+    padding: 6px 40px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 22px;
+
+    border: 2px solid #444;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+}
+  
+
+
+
+
+/* ====== CONTENU CENTRAL ====== */
+
+.pack-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+}
+/* boite grise */
+.pack-wrapper {
+    background-color: rgba(30, 30, 30, 0.9); /* fond gris semi-transparent */
+    border: 2px solid rgba(0, 0, 0, 0.333);    /* ✅ contour noir net */
+    border-radius: 20px;
+    padding: 20px;
+
+    width: 400px;
+    height: 500px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 35px auto 0 auto;
+
+
+    /* ✅ lueur jaune autour */
+    box-shadow: 0 0 25px 5px rgba(15, 15, 13, 0.8); 
+}
+
+
+
+.pack-card {
+    width: 245px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 35px 15px rgba(125, 94, 10, 0.7);
+
+    
+    animation: yellowPulse 2.5s infinite;
+}
+/*animation lumiere jaune */
+@keyframes yellowPulse {
+    0% {
+      box-shadow: 0 0 20px 5px rgba(200, 160, 10, 0.95); /* jaune doré plus doux */
+    }
+    50% {
+      box-shadow: 0 0 25px 8px rgba(220, 180, 50, 0.8); /* un peu plus intense au centre */
+    }
+    100% {
+      box-shadow: 0 0 20px 5px rgba(200, 160, 10, 0.95);
+    }
+  }
+  
+
+.pack-card:hover {
+    transform: scale(1.05); /* zoom léger */
+    box-shadow: 0 0 50px 25px rgba(255, 230, 100, 0.95); /* lumière plus intense */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pack-price {
+    font-family: 'Pirata One', cursive; /* police stylée */
+    display: inline-block;
+    background-color: rgba(30, 30, 30, 0.8); /* gris clair */
+    border: 2px solid #00000000;
+    color: #ffd700;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    min-width: 180px;
+  }
+
+
+
+.pack-container {
+    background-color: rgba(128, 128, 128, 0.2); /* Gris transparent */
+    padding: 20px;
+    border-radius: 12px;
+    width: fit-content;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Optionnel pour un petit effet relief */
+  }
+  
+
+  
+
+.confirmation-box {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20, 20, 20, 0.95);
+    border: 2px solid gold;
+    color: #ffd700;
+    padding: 30px;
+    font-family: 'Pirata One', cursive;
+    border-radius: 12px;
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+.confirmation-box button {
+    margin: 10px;
+    padding: 8px 20px;
+    font-family: 'Pirata One', cursive;
+    font-size: 16px;
+    background-color: #ffd700;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #222;
+    font-weight: bold;
+}
+/*===========carte revelation=========*/
+.reveal-box {
+    display: none;
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: rgba(10, 10, 10, 0.95);
+    padding: 20px; /* même padding que .pack-wrapper */
+    border: 2px solid #ffd700;
+    border-radius: 20px; /* même arrondi */
+    text-align: center;
+    z-index: 2000;
+
+    font-family: 'Pirata One', cursive;
+    color: #ffd700;
+
+    box-shadow: 0 0 25px 5px rgba(15, 15, 13, 0.8); /* même ombre que .pack-wrapper */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 55px auto 0 auto;
+}
+
+/* Modifier le contour selon la rareté */
+.reveal-box.rarity-common {
+    border-color: #00ff00; /* Vert */
+}
+.reveal-box.rarity-rare {
+    border-color: #3399ff; /* Bleu */
+}
+.reveal-box.rarity-trerare {
+    border-color: #ff9900; /* Orange */
+}
+.reveal-box.rarity-epique {
+    border-color: #a033ff; /* Mauve */
+}
+.reveal-box.rarity-legendaire {
+    border: 3px solid red; /* rose */
+    box-shadow: 0 0 25px 10px red; /* lumière rose autour du cadre */
+}
+
+
+.card-reveal {
+    width: 250px;       
+    max-width: 90%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 20px 5px rgba(255, 255, 0, 0.5); /* optionnel : glow jaune */
+    display: block;
+    margin : 0 auto;
+    margin-top: 40px;
+}
+
+/* Couleurs de lumière selon la rareté */
+.rarity-common.card-reveal {
+    box-shadow: 0 0 25px 10px rgba(0, 255, 0, 0.6); /* Vert */
+}
+.rarity-rare.card-reveal {
+    box-shadow: 0 0 25px 10px rgba(0, 128, 255, 0.6); /* Bleu */
+}
+.rarity-trerare.card-reveal {
+    box-shadow: 0 0 25px 10px rgba(255, 165, 0, 0.6); /* Orange */
+}
+.rarity-epique.card-reveal {
+    box-shadow: 0 0 25px 10px rgba(138, 43, 226, 0.6); /* Mauve */
+}
+.rarity-legendaire.card-reveal {
+    box-shadow: 0 0 25px 10px rgba(255, 215, 0, 0.7); /* Or */
+}
+
+.rarity-label {
+    font-size: 35px;
+    font-family: 'Pirata One', cursive;
+    text-align: center;
+    margin-top: -4px;  /* Monte le titre */
+    margin-bottom: 10px;
+    text-shadow: none !important;
+}
+
+
+.card-name {
+    font-family: 'Pirata One', cursive;
+    color: yellow;
+    font-size: 28px;
+    text-shadow: 2px 2px 5px black;
+    margin-bottom: -10px;
+}
+.card-rarity {
+    font-size: 20px;
+    font-family: 'MedievalSharp', cursive;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px black;
+}
+
+.rarity-common {
+    color: #00cc00; /* vert */
+}
+
+.rarity-rare {
+    color: #3399ff; /* bleu */
+}
+
+.rarity-trerare {
+    color: #ff9900; /* orange */
+}
+
+.rarity-epique {
+    color: #cc66ff; /* mauve */
+}
+
+.rarity-legendaire {
+    color: red; /* rose flashy */
+}
+.card-reveal.rarity-legendaire {
+    box-shadow: 0 0 25px 8px red;
+}
+@keyframes legendaryPulse {
+    0%   { box-shadow: 0 0 20px 5px rgba(255, 0, 0, 0.751); }
+    50%  { box-shadow: 0 0 30px 10px rgb(216, 30, 30); }
+    100% { box-shadow: 0 0 20px 5px rgba(238, 25, 25, 0.71); }
+  }
+  .card-reveal.rarity-legendaire {
+    animation: legendaryPulse 2s infinite;
+}
+  
+
+
+
+
+/* ====== BOUTON RETOUR ====== */
+.retour {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    text-decoration: none;
+    color: #ffffffc2;
+    font-family: 'Pirata One', cursive;
+    font-weight: bold;
+    font-size: 20px;
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+/*animation revelation carte*/
+@keyframes revealCard {
+    0% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  .card-reveal {
+    animation: revealCard 0.8s ease-out;
+    transition: transform 0.3s ease;
+  }
+  
+
+
+
+
 
 
 
