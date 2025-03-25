@@ -6,11 +6,17 @@ function registerUser() {
     global $pdo;
     $data = json_decode(file_get_contents("php://input"), true);
     $username = trim($data["username"] ?? '');
+    $email = trim($data["email"] ?? '');
     $password = trim($data["password"] ?? '');
     $confirm_password = trim($data["confirm_password"] ?? '');
 
-    if (!$username || !$password || !$confirm_password) {
+    if (!$username || !$email || !$password || !$confirm_password) {
         echo json_encode(["error" => "Tous les champs sont requis."]);
+        return;
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(["error" => "Adresse email invalide."]);
         return;
     }
 
@@ -26,12 +32,18 @@ function registerUser() {
         return;
     }
 
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->execute([$email]);
+    if ($stmt->fetch()) {
+        echo json_encode(["error" => "Email déjà utilisé."]);
+        return;
+    }
+
     $hashed = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-    $stmt->execute([$username, $hashed]);
+    $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+    $stmt->execute([$username, $email, $hashed]);
     $user_id = $pdo->lastInsertId();
 
-    // Ajouter les 10 cartes de base
     $starter_cards = [1,2,3,4,5,6,7,8,9,10];
     $stmt = $pdo->prepare("INSERT INTO inventory (user_id, card_id) VALUES (?, ?)");
     foreach ($starter_cards as $card_id) {

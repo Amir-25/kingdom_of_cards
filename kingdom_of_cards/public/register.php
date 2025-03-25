@@ -11,6 +11,10 @@
         <form id="register-form" method="post">
             <label>Nom d'utilisateur :</label>
             <input type="text" name="username" required>
+
+            <label>Email :</label>
+            <input type="email" name="email" required>
+
             
             <label>Mot de passe :</label>
             <input type="password" name="password" required>
@@ -39,6 +43,7 @@
 
             const formData = {
                 username: document.querySelector("input[name='username']").value,
+                email: document.querySelector("input[name='email']").value,
                 password: document.querySelector("input[name='password']").value,
                 confirm_password: document.querySelector("input[name='confirm_password']").value
             };
@@ -50,14 +55,20 @@
                 credentials: "same-origin"
             });
 
-            const result = await response.json();
-            alert(result.success || result.error);
-
-            if (result.success) {
-                window.location.href = "login.php";
+            const text = await response.text();
+            console.log("Réponse serveur:", text);
+            try {
+                const result = JSON.parse(text);
+                alert(result.success || result.error);
+                if (result.success) {
+                    window.location.href = "login.php";
+                }
+            } catch (e) {
+                alert("Erreur de réponse du serveur.");
             }
         });
     </script>
+
     <script src="audio.js"></script>
 </body>
 </html>
