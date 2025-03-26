@@ -44,10 +44,18 @@ function registerUser() {
     $stmt->execute([$username, $email, $hashed]);
     $user_id = $pdo->lastInsertId();
 
-    $starter_cards = [1,2,3,4,5,6,7,8,9,10];
-    $stmt = $pdo->prepare("INSERT INTO inventory (user_id, card_id) VALUES (?, ?)");
-    foreach ($starter_cards as $card_id) {
-        $stmt->execute([$user_id, $card_id]);
+    // ✅ Donne les 5 cartes de départ
+    $starterCards = [
+        1 => 1, // Gobelin Pyromane
+        2 => 1, // Serpent des Sables
+        3 => 1, // Golem Mécanique
+        4 => 1, // Chimère Sanglante
+        5 => 1  // Gardien Spectral
+    ];
+
+    $stmt = $pdo->prepare("INSERT INTO joueur_cartes (id_joueur, id_carte, quantite) VALUES (?, ?, ?)");
+    foreach ($starterCards as $idCarte => $quantite) {
+        $stmt->execute([$user_id, $idCarte, $quantite]);
     }
 
     echo json_encode(["success" => "Inscription réussie"]);
@@ -59,14 +67,27 @@ function loginUser() {
     $username = trim($data["username"] ?? '');
     $password = trim($data["password"] ?? '');
 
-    $stmt = $pdo->prepare("SELECT id, password FROM users WHERE username = ?");
+    if (empty($username) || empty($password)) {
+        echo json_encode(["error" => "Champs manquants"]);
+        return;
+    }
+
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
     $stmt->execute([$username]);
-    $user = $stmt->fetch();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user && password_verify($password, $user["password"])) {
         $_SESSION["user_id"] = $user["id"];
-        $_SESSION["username"] = $username;
-        echo json_encode(["success" => "Connexion réussie"]);
+        $_SESSION["username"] = $user["username"];
+
+        echo json_encode([
+            "success" => true,
+            "user" => [
+                "username" => $user["username"],
+                "email" => $user["email"],
+                "money" => $user["money"]
+            ]
+        ]);
     } else {
         echo json_encode(["error" => "Identifiants invalides"]);
     }
@@ -76,3 +97,18 @@ function logoutUser() {
     session_destroy();
     echo json_encode(["success" => "Déconnexion réussie"]);
 }
+
+// ROUTEUR AUTOMATIQUE
+$path = $_SERVER['REQUEST_URI'];
+
+if (strpos($path, "register") !== false) {
+    registerUser();
+} elseif (strpos($path, "login") !== false) {
+    loginUser();
+} elseif (strpos($path, "logout") !== false) {
+    logoutUser();
+} else {
+    echo json_encode(["error" => "Route non reconnue"]);
+}
+
+

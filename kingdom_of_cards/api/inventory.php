@@ -1,38 +1,27 @@
 <?php
-require_once "../config.php";
 session_start();
+header('Content-Type: application/json');
 
-$user_id = $_SESSION["user_id"];
-
-// Charger les cartes du joueur
-if ($_SERVER["REQUEST_METHOD"] === "GET") {
-    $stmt = $pdo->prepare("SELECT c.id, c.name, c.type, c.attack, c.defense, c.image 
-                           FROM inventory i
-                           JOIN cards c ON i.card_id = c.id
-                           WHERE i.user_id = ?");
-    $stmt->execute([$user_id]);
-    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['error' => 'Utilisateur non connecté']);
+    exit;
 }
 
-// Sauvegarder le deck
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $data = json_decode(file_get_contents("php://input"), true);
+require_once '../config.php';
 
-    if (count($data["deck"]) !== 10) {
-        echo json_encode(["error" => "Le deck doit contenir exactement 10 cartes."]);
-        exit;
-    }
+try {
+    $stmt = $pdo->prepare("
+        SELECT c.id, c.nom AS name, c.image_path AS image, jc.quantite AS quantity
+        FROM joueur_cartes jc
+        JOIN cartes c ON jc.id_carte = c.id
+        WHERE jc.id_joueur = ?
+    ");
+    $stmt->execute([$_SESSION['user_id']]);
+    $cartes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Supprimer l'ancien deck
-    $stmt = $pdo->prepare("DELETE FROM deck WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-
-    // Insérer les nouvelles cartes
-    $stmt = $pdo->prepare("INSERT INTO deck (user_id, card_id, position) VALUES (?, ?, ?)");
-    foreach ($data["deck"] as $index => $card_id) {
-        $stmt->execute([$user_id, $card_id, $index + 1]);
-    }
-
-    echo json_encode(["success" => "Deck sauvegardé avec succès."]);
+    echo json_encode($cartes);
+} catch (PDOException $e) {
+    echo json_encode(['error' => "Erreur serveur : " . $e->getMessage()]);
 }
-?>
+
+

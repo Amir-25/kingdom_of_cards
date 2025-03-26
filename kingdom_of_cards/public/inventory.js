@@ -1,65 +1,151 @@
-document.addEventListener("DOMContentLoaded", async function () {
-    const cardList = document.querySelector(".card-list");
-    const deckSlots = document.querySelectorAll(".slot");
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("../api/inventory.php")
+        .then(response => response.json())
+        .then(cartes => {
+            const container = document.querySelector(".card-list");
+            container.innerHTML = "";
 
-    // Charger les cartes du joueur
-    const response = await fetch("/api/inventory.php");
-    const cards = await response.json();
+            cartes.forEach(carte => {
+                const cardDiv = createCardElement(carte.name, carte.image, carte.quantity);
+                container.appendChild(cardDiv);
+            });
 
-    // Vérifier si on a bien reçu les cartes
-    if (!Array.isArray(cards) || cards.length === 0) {
-        console.log("Aucune carte trouvée pour cet utilisateur.");
-        return;
+            // Drag & Drop pour les slots
+            setupDragAndDrop();
+        })
+        .catch(error => {
+            console.error("Erreur lors du chargement des cartes :", error);
+        });
+});
+
+// Auto-scroll pendant le drag
+document.addEventListener("dragover", function (e) {
+    const scrollMargin = 100;  // distance à partir du haut/bas pour déclencher le scroll
+    const scrollSpeed = 10;    // vitesse du scroll
+
+    const y = e.clientY;
+
+    if (y < scrollMargin) {
+        // Vers le haut
+        window.scrollBy(0, -scrollSpeed);
+    } else if (y > window.innerHeight - scrollMargin) {
+        // Vers le bas
+        window.scrollBy(0, scrollSpeed);
     }
+});
 
-    // Afficher les cartes en bas
-    cards.forEach(card => {
-        const cardElement = document.createElement("div");
-        cardElement.classList.add("card");
-        cardElement.setAttribute("draggable", "true");
-        cardElement.dataset.id = card.id;
-        cardElement.innerHTML = `<img src="${card.image}" alt="${card.name}">`;
-        cardList.appendChild(cardElement);
 
-        // Ajouter l'événement de drag
-        cardElement.addEventListener("dragstart", function (e) {
-            e.dataTransfer.setData("cardId", card.id);
+// Crée une carte HTML
+function createCardElement(name, image, quantity) {
+    const cardDiv = document.createElement("div");
+    cardDiv.classList.add("card");
+    cardDiv.setAttribute("draggable", "true");
+    cardDiv.dataset.name = name;
+    cardDiv.dataset.image = image;
+    cardDiv.dataset.quantity = quantity;
+
+    const img = document.createElement("img");
+    img.src = image;
+    img.alt = name;
+
+    const badge = document.createElement("div");
+    badge.classList.add("card-count");
+    const span = document.createElement("span");
+    span.textContent = "x" + quantity;
+    badge.appendChild(span);
+
+    cardDiv.appendChild(img);
+    cardDiv.appendChild(badge);
+
+    return cardDiv;
+}
+
+function setupDragAndDrop() {
+    const slots = document.querySelectorAll(".slot");
+
+    document.querySelectorAll(".card").forEach(card => {
+        card.addEventListener("dragstart", e => {
+            e.dataTransfer.setData("text/plain", JSON.stringify({
+                name: card.dataset.name,
+                image: card.dataset.image
+            }));
+            card.classList.add("dragging");
+        });
+
+        card.addEventListener("dragend", e => {
+            card.classList.remove("dragging");
         });
     });
 
-    // Permettre le drop des cartes dans les slots du deck
-    deckSlots.forEach(slot => {
-        slot.addEventListener("dragover", e => e.preventDefault());
-
-        slot.addEventListener("drop", function (e) {
+    slots.forEach(slot => {
+        slot.addEventListener("dragover", e => {
             e.preventDefault();
-            const cardId = e.dataTransfer.getData("cardId");
+            slot.classList.add("highlight");
+        });
 
-            // Vérifier si la case est vide
-            if (!this.dataset.cardId) {
-                const selectedCard = cards.find(c => c.id == cardId);
-                this.innerHTML = `<img src="${selectedCard.image}" alt="Card">`;
-                this.dataset.cardId = cardId;
+        slot.addEventListener("dragleave", () => {
+            slot.classList.remove("highlight");
+        });
+        slot.addEventListener("drop", e => {
+            e.preventDefault();
+            slot.classList.remove("highlight");
+        
+            const data = JSON.parse(e.dataTransfer.getData("text/plain"));
+            if (slot.hasChildNodes()) return;
+        
+            // Cherche la carte dans l'inventaire
+            const card = [...document.querySelectorAll(".card")].find(
+                c => c.dataset.name === data.name && !c.classList.contains("in-slot")
+            );
+            if (!card) return;
+        
+            // Crée une copie propre pour le slot
+            const cloned = card.cloneNode(true);
+            cloned.classList.add("in-slot");
+            cloned.classList.add("card"); // Assure la taille
+            cloned.setAttribute("draggable", "false");
+            cloned.querySelector(".card-count").remove(); // supprime le badge
+            slot.appendChild(cloned);
+        
+            // Diminue la quantité dans l'inventaire
+            let qte = parseInt(card.dataset.quantity);
+            qte--;
+            if (qte <= 0) {
+                card.remove();
+            } else {
+                card.dataset.quantity = qte;
+                card.querySelector(".card-count span").textContent = "x" + qte;
             }
         });
-    });
+        
 
-    // Sauvegarde du deck
-    document.getElementById("save-deck").addEventListener("click", async function () {
-        const deck = Array.from(deckSlots).map(slot => slot.dataset.cardId).filter(id => id);
+        slot.addEventListener("click", () => {
+            const card = slot.querySelector(".in-slot");
+            if (!card) return;
 
-        if (deck.length !== 10) {
-            alert("Le deck doit contenir exactement 10 cartes.");
-            return;
-        }
+            const name = card.dataset.name;
+            const image = card.dataset.image;
 
-        const response = await fetch("/api/inventory.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ deck })
+            // Retour dans l’inventaire
+            const existing = [...document.querySelectorAll(".card")].find(c => c.dataset.name === name && !c.classList.contains("in-slot"));
+            if (existing) {
+                let qte = parseInt(existing.dataset.quantity);
+                qte++;
+                existing.dataset.quantity = qte;
+                existing.querySelector(".card-count span").textContent = "x" + qte;
+            } else {
+                const cardDiv = createCardElement(name, image, 1);
+                document.querySelector(".card-list").appendChild(cardDiv);
+                setupDragAndDrop(); // Reconnecter les événements
+            }
+
+            slot.innerHTML = "";
         });
-
-        const result = await response.json();
-        alert(result.success || result.error);
     });
-});
+}
+
+
+
+
+
+

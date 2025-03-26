@@ -244,14 +244,13 @@ a:hover {
     text-align: contain;
 }
 
-/* Zone du deck */
+/* ===================== ZONE DU DECK ===================== */
 .deck-slots {
     background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(40, 40, 40, 0.9));
     display: grid;
     grid-template-columns: repeat(5, auto); 
     grid-template-rows: repeat(2, auto);
     gap: 10px;
-    position: relative;
     width: fit-content; 
     margin: 20px auto;
     padding: 20px 30px;
@@ -259,8 +258,7 @@ a:hover {
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
 }
 
-
-
+/* Slot vide pour cartes */
 .slot {
     width: 120px;
     height: 180px;
@@ -271,15 +269,28 @@ a:hover {
     align-items: center;
 }
 
-/* Effet lorsqu'une carte approche */
+/* Highlight visuel quand une carte est survolée */
 .slot.highlight {
-    opacity: 1;
     border: 3px solid gold;
     box-shadow: 0px 0px 15px rgba(255, 215, 0, 0.7);
 }
 
+/* Ajustement visuel pour les cartes placées dans les slots */
+.slot .in-slot {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
 
-/* Cartes de l'inventaire */
+.slot .in-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* ===================== INVENTAIRE DES CARTES ===================== */
 .card-list {
     display: flex;
     flex-wrap: wrap;
@@ -287,27 +298,80 @@ a:hover {
     justify-content: center;
     margin-top: 50px;
     padding: 20px;
+    
 }
 
 .card {
+    position: relative;
     width: 200px;
     height: 300px;
-    border-radius: 10px;
+    border-radius: 12px;
+    overflow: hidden;
     box-shadow: 0 0 10px gold;
     cursor: grab;
     transition: transform 0.2s ease-in-out;
+    background-color: black;
 }
 
 .card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 0;
 }
 
 .card:hover {
     transform: scale(1.1);
 }
+
+/* Badge de quantité dans un petit cercle */
+.card-count {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: #f8f8f8;
+    color: black;
+    font-weight: bold;
+    font-size: 13px;
+    padding: 5px;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    transform: rotate(45deg);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.card-count span {
+    transform: rotate(-45deg);
+    display: inline-block;
+}
+
+/* ===================== AUDIO CONTROLE ===================== */
+.audio-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border: 2px solid yellow;
+    border-radius: 10px;
+    color: white;
+    font-family: 'Pirata One', cursive;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.volume-slider {
+    accent-color: yellow;
+}
+
+
+
 /**********************SHOP*********************/
 
 /* ====== PAGE SHOP ====== */
@@ -527,13 +591,13 @@ a:hover {
 }
 
 /* Modifier le contour selon la rareté */
-.reveal-box.rarity-common {
+.reveal-box.rarity-commun {
     border-color: #00ff00; /* Vert */
 }
 .reveal-box.rarity-rare {
     border-color: #3399ff; /* Bleu */
 }
-.reveal-box.rarity-trerare {
+.reveal-box.rarity-tresrare {
     border-color: #ff9900; /* Orange */
 }
 .reveal-box.rarity-epique {
@@ -557,13 +621,13 @@ a:hover {
 }
 
 /* Couleurs de lumière selon la rareté */
-.rarity-common.card-reveal {
+.rarity-commun.card-reveal {
     box-shadow: 0 0 25px 10px rgba(0, 255, 0, 0.6); /* Vert */
 }
 .rarity-rare.card-reveal {
     box-shadow: 0 0 25px 10px rgba(0, 128, 255, 0.6); /* Bleu */
 }
-.rarity-trerare.card-reveal {
+.rarity-tresrare.card-reveal {
     box-shadow: 0 0 25px 10px rgba(255, 165, 0, 0.6); /* Orange */
 }
 .rarity-epique.card-reveal {
@@ -599,7 +663,7 @@ a:hover {
     text-shadow: 1px 1px 3px black;
 }
 
-.rarity-common {
+.rarity-commun {
     color: #00cc00; /* vert */
 }
 
@@ -607,7 +671,7 @@ a:hover {
     color: #3399ff; /* bleu */
 }
 
-.rarity-trerare {
+.rarity-tresrare {
     color: #ff9900; /* orange */
 }
 
