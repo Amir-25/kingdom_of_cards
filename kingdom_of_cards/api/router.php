@@ -21,6 +21,10 @@ if ($method === "POST" && $endpoint === "register") {
     loginUser();
 } elseif ($method === "GET" && $endpoint === "logout") {
     logoutUser();
+} elseif ($method === "POST" && $endpoint === "save_deck") {
+    saveDeck();
+} elseif ($method === "GET" && $endpoint === "load_deck") {
+    loadDeck();
 } else {
     http_response_code(404);
     echo json_encode(["error" => "Route introuvable"]);
