@@ -39,7 +39,6 @@ if (!isset($_SESSION["user_id"])) {
     </div>
 
     <script>
-        // On utilise un chemin relatif pour pointer vers l'API, vu que ton projet est dans un sous-dossier
         document.getElementById("logout-btn").addEventListener("click", function() {
             fetch("../api/router.php/logout", {
                 credentials: "same-origin"

@@ -110,7 +110,7 @@ a:hover {
 }
 
 /* ===================== */
-/* 🔥 Page d'accueil 🔥 */
+/*     Page d'accueil   */
 /* ===================== */
 
 .intro-container {
@@ -173,7 +173,7 @@ a:hover {
 }
 
 /* ===================== */
-/* 🔥 Page Home 🔥 */
+/*      Page Home  */
 /* ===================== */
 
 .home-container {
@@ -312,7 +312,7 @@ a:hover {
 
 /* ====== PAGE SHOP ====== */
 .shop-page {
-    background-image: url('assets/shop-background.webp'); /* ou ton image actuelle */
+    background-image: url('assets/shop-background.webp'); 
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -334,7 +334,7 @@ a:hover {
     box-sizing: border-box;
 
     border-bottom: 3px solid #ffd700; /* fine ligne jaune en bas */
-    border-top: 3px solid #ffd700; /* facultatif */
+    border-top: 3px solid #ffd700; 
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.3);
 }
 .username {
@@ -357,13 +357,13 @@ a:hover {
 .user-info {
     display: flex;
     align-items: center;
-    gap: 30px; /* 👈 plus de respiration */
+    gap: 30px; 
     
 }
 
 
 .currency {
-    font-family: 'Pirata One', cursive; /* police stylée */
+    font-family: 'Pirata One', cursive; 
     background-color: #666;
     color: #f0d841;
     padding: 6px 40px;
@@ -391,7 +391,7 @@ a:hover {
 /* boite grise */
 .pack-wrapper {
     background-color: rgba(30, 30, 30, 0.9); /* fond gris semi-transparent */
-    border: 2px solid rgba(0, 0, 0, 0.333);    /* ✅ contour noir net */
+    border: 2px solid rgba(0, 0, 0, 0.333);    /* contour noir net */
     border-radius: 20px;
     padding: 20px;
 
@@ -405,7 +405,7 @@ a:hover {
     margin: 35px auto 0 auto;
 
 
-    /* ✅ lueur jaune autour */
+    /* lueur jaune autour */
     box-shadow: 0 0 25px 5px rgba(15, 15, 13, 0.8); 
 }
 
@@ -577,7 +577,7 @@ a:hover {
     font-size: 35px;
     font-family: 'Pirata One', cursive;
     text-align: center;
-    margin-top: -4px;  /* Monte le titre */
+    margin-top: -4px;  
     margin-bottom: 10px;
     text-shadow: none !important;
 }
@@ -664,6 +664,7 @@ a:hover {
     animation: revealCard 0.8s ease-out;
     transition: transform 0.3s ease;
   }
+
   
 
 

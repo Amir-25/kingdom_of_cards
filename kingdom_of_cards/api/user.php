@@ -91,3 +91,65 @@ function logoutUser() {
     session_destroy();
     echo json_encode(["success" => "Déconnexion réussie"]);
 }
+
+function saveDeck() {
+    global $pdo;
+    session_start();
+    if (!isset($_SESSION["user_id"])) {
+        echo json_encode(["error" => "Non connecté"]);
+        return;
+    }
+
+    $data = json_decode(file_get_contents("php://input"), true);
+    $user_id = $_SESSION["user_id"];
+    $deck = $data["deck"] ?? [];
+
+    // Vider l'ancien deck
+    $pdo->prepare("DELETE FROM deck WHERE user_id = ?")->execute([$user_id]);
+
+    // Enregistrer le nouveau
+    $stmt = $pdo->prepare("INSERT INTO deck (user_id, card_id, position) VALUES (?, ?, ?)");
+
+    foreach ($deck as $entry) {
+        $src = $entry["src"];
+        $position = $entry["position"];
+
+        // Extraire le nom de fichier pour chercher l'ID
+        $filename = basename($src); // exemple : golem_apocalypse.jpg
+        $query = $pdo->prepare("SELECT id FROM cards WHERE image LIKE ?");
+        $query->execute(["%$filename"]);
+        $card = $query->fetch();
+
+        if ($card) {
+            $stmt->execute([$user_id, $card["id"], $position]);
+        }
+    }
+
+    echo json_encode(["success" => "Deck sauvegardé avec succès"]);
+}
+
+function loadDeck() {
+    global $pdo;
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+
+    if (!isset($_SESSION["user_id"])) {
+        echo json_encode(["error" => "Non connecté"]);
+        return;
+    }
+
+    $user_id = $_SESSION["user_id"];
+    $stmt = $pdo->prepare("
+        SELECT d.position, c.image, c.name
+        FROM deck d
+        JOIN cards c ON d.card_id = c.id
+        WHERE d.user_id = ?
+        ORDER BY d.position ASC
+    ");
+    $stmt->execute([$user_id]);
+    $deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo json_encode(["deck" => $deck]);
+}
