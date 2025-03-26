@@ -59,14 +59,29 @@ function loginUser() {
     $username = trim($data["username"] ?? '');
     $password = trim($data["password"] ?? '');
 
-    $stmt = $pdo->prepare("SELECT id, password FROM users WHERE username = ?");
+    if (empty($username) || empty($password)) {
+        echo json_encode(["error" => "Champs manquants"]);
+        return;
+    }
+
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
     $stmt->execute([$username]);
-    $user = $stmt->fetch();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user && password_verify($password, $user["password"])) {
+        // Pour la version web
         $_SESSION["user_id"] = $user["id"];
-        $_SESSION["username"] = $username;
-        echo json_encode(["success" => "Connexion réussie"]);
+        $_SESSION["username"] = $user["username"];
+
+        // Pour Android : on renvoie les infos utiles
+        echo json_encode([
+            "success" => true,
+            "user" => [
+                "username" => $user["username"],
+                "email" => $user["email"],
+                "money" => $user["money"]
+            ]
+        ]);
     } else {
         echo json_encode(["error" => "Identifiants invalides"]);
     }
