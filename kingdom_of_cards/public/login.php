@@ -50,6 +50,8 @@
             });
 
             const text = await response.text();
+            console.log("→ Texte reçu brut :", JSON.stringify(text));
+
             console.log("Réponse serveur:", text);
             try {
                 const result = JSON.parse(text);

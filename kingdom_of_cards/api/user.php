@@ -12,31 +12,31 @@ function registerUser() {
 
     if (!$username || !$email || !$password || !$confirm_password) {
         echo json_encode(["error" => "Tous les champs sont requis."]);
-        return;
+        exit;
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo json_encode(["error" => "Adresse email invalide."]);
-        return;
+        exit;
     }
 
     if ($password !== $confirm_password) {
         echo json_encode(["error" => "Les mots de passe ne correspondent pas."]);
-        return;
+        exit;
     }
 
     $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
     $stmt->execute([$username]);
     if ($stmt->fetch()) {
         echo json_encode(["error" => "Nom d'utilisateur déjà pris."]);
-        return;
+        exit;
     }
 
     $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
     $stmt->execute([$email]);
     if ($stmt->fetch()) {
         echo json_encode(["error" => "Email déjà utilisé."]);
-        return;
+        exit;
     }
 
     $hashed = password_hash($password, PASSWORD_DEFAULT);
@@ -44,7 +44,7 @@ function registerUser() {
     $stmt->execute([$username, $email, $hashed]);
     $user_id = $pdo->lastInsertId();
 
-    // ✅ Donne les 5 cartes de départ
+    //Donne les 5 cartes de départ
     $starterCards = [
         1 => 1, // Gobelin Pyromane
         2 => 1, // Serpent des Sables
@@ -59,6 +59,7 @@ function registerUser() {
     }
 
     echo json_encode(["success" => "Inscription réussie"]);
+    exit;
 }
 
 function loginUser() {
@@ -89,13 +90,16 @@ function loginUser() {
                 "money" => $user["money"]
             ]
         ]);
+        exit;
     } else {
         echo json_encode(["error" => "Identifiants invalides"]);
+        exit;
     }
 }
     function logoutUser() {
         session_destroy();
         echo json_encode(["success" => "Déconnexion réussie"]);
+        exit;
     }
     
     // ROUTEUR AUTOMATIQUE
@@ -123,7 +127,6 @@ function loginUser() {
     
         if (!isset($_SESSION["user_id"])) {
             echo json_encode(["error" => "Non connecté"]);
-            return;
         }
     
         $data = json_decode(file_get_contents("php://input"), true);
@@ -174,5 +177,6 @@ function loginUser() {
         $deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
         echo json_encode(["deck" => $deck]);
+        exit;
     }
     
