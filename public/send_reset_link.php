@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->execute([$email, $token, $expires]);
 
     // Envoi de l'email
-    $resetLink = "http://localhost/Kingdom-of-Cards/kingdom_of_cards/public/reset_password.php?token=$token";
+    $resetLink = "http://localhost/kingdom_of_cards/public/reset_password.php?token=$token";
 
     $mail = new PHPMailer(true);
     $mail->isSMTP();

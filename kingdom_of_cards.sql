@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 127.0.0.1
--- Généré le : lun. 17 mars 2025 à 10:46
--- Version du serveur : 10.4.32-MariaDB
--- Version de PHP : 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Mar 27, 2025 at 08:13 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,189 +18,213 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `kingdom_of_cards`
+-- Database: `kingdom_of_cards`
 --
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `cards`
+-- Table structure for table `cartes`
 --
 
-CREATE TABLE `cards` (
+CREATE TABLE `cartes` (
   `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `type` enum('Monstre','Fusion') NOT NULL,
-  `attack` int(11) NOT NULL,
+  `nom` varchar(100) NOT NULL,
+  `rarete` enum('Commune','Rare','Très Rare','Épique','Légendaire','Mythique') NOT NULL,
+  `attaque` int(11) NOT NULL,
   `defense` int(11) NOT NULL,
-  `ability` text DEFAULT NULL,
-  `image` varchar(255) NOT NULL,
-  `fusion_card_1` int(11) DEFAULT NULL,
-  `fusion_card_2` int(11) DEFAULT NULL
+  `effet` text DEFAULT NULL,
+  `fusionnable` tinyint(1) DEFAULT 0,
+  `image_path` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Déchargement des données de la table `cards`
+-- Dumping data for table `cartes`
 --
 
-INSERT INTO `cards` (`id`, `name`, `type`, `attack`, `defense`, `ability`, `image`, `fusion_card_1`, `fusion_card_2`) VALUES
-(1, 'Gobelin Pyromane', 'Monstre', 1200, 800, NULL, 'assets/Cartes/gobelin_pyromane.jpg', NULL, NULL),
-(2, 'Serpent des Sables', 'Monstre', 1000, 900, NULL, 'assets/Cartes/serpent_des_sables.jpg', NULL, NULL),
-(3, 'Golem Mécanique', 'Monstre', 1600, 2000, NULL, 'assets/Cartes/golem_mecanique.jpg', NULL, NULL),
-(4, 'Chimère sanglante', 'Monstre', 1800, 1200, NULL, 'assets/Cartes/chimere_sanglante.jpg', NULL, NULL),
-(5, 'Gardien Spectral', 'Monstre', 1400, 1700, NULL, 'assets/Cartes/gardien_spectral.jpg', NULL, NULL),
-(6, 'Dragon du Néant', 'Monstre', 2000, 1500, NULL, 'assets/Cartes/dragon_du_neant.jpg', NULL, NULL),
-(7, 'Chevalier de la Faille', 'Monstre', 1500, 1300, NULL, 'assets/Cartes/chevalier_de_la_faille.jpg', NULL, NULL),
-(8, 'Roi des Profondeurs', 'Monstre', 1700, 1800, NULL, 'assets/Cartes/roi_des_profondeurs.jpg', NULL, NULL),
-(9, 'Titan du Néant', 'Monstre', 1900, 1900, NULL, 'assets/Cartes/titan_du_neant.jpg', NULL, NULL),
-(10, 'Seigneur du Chaos Abyssal', 'Monstre', 2100, 1600, NULL, 'assets/Cartes/seigneur_du_chaos_abyssal.jpg', NULL, NULL),
-(11, 'Béhémoth des Abysses', 'Fusion', 2600, 2300, NULL, 'assets/Cartes/behemoth_des_abysses.jpg', 8, 9),
-(12, 'Golem Apocalypse', 'Fusion', 3000, 2700, NULL, 'assets/Cartes/golem_apocalypse.jpg', 3, 5),
-(13, 'Dragon Eclipse Infernale', 'Fusion', 3200, 2900, NULL, 'assets/Cartes/dragon_eclipse_infernale.jpg', 6, 10),
-(14, 'Roi de la Destruction Totale', 'Fusion', 3400, 3000, NULL, 'assets/Cartes/roi_destruction_totale.jpg', 4, 7),
-(15, 'Chaos Céleste', 'Fusion', 4000, 3500, NULL, 'assets/Cartes/chaos_celeste.jpg', 13, 14);
+INSERT INTO `cartes` (`id`, `nom`, `rarete`, `attaque`, `defense`, `effet`, `fusionnable`, `image_path`) VALUES
+(1, 'Gobelin Pyromane', 'Commune', 1400, 1000, NULL, 0, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/gobelin_pyromane.jpg'),
+(2, 'Serpent des Sables', 'Commune', 1200, 1600, NULL, 0, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/serpent_des_sables.jpg'),
+(3, 'Golem Mécanique', 'Commune', 1700, 800, NULL, 1, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/golem_mecanique.jpg'),
+(4, 'Chimère Sanglante', 'Rare', 1800, 1300, NULL, 1, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/chimere_sanglante.jpg'),
+(5, 'Gardien Spectral', 'Rare', 1500, 2000, NULL, 1, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/gardien_spectral.jpg'),
+(6, 'Dragon du Néant', 'Très Rare', 2000, 1800, 'Voracité du Néant : gagne +500 ATK quand il détruit un monstre', 1, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/dragon_du_neant.jpg'),
+(7, 'Chevalier de la Faille', 'Très Rare', 1900, 2100, 'Rupture Dimensionnelle : bannit les monstres qu’il détruit', 1, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/chevalier_de_la_faille.jpg'),
+(8, 'Roi des Profondeurs', 'Épique', 2400, 2000, 'Marée Déferlante : -300 ATK aux ennemis', 1, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/roi_des_profondeurs.jpg'),
+(9, 'Titan du Néant', 'Épique', 2500, 2200, 'Dévoreur d’Âmes : régénère 500 PV en détruisant un monstre', 1, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/titan_du_neant.jpg'),
+(10, 'Seigneur du Chaos Abyssal', 'Légendaire', 2800, 2500, 'Marque du Néant : si une carte marquée est détruite, son propriétaire perd 500 PV', 1, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/seigneur_du_chaos_abyssal.jpg'),
+(11, 'Béhémoth des Abysses', 'Épique', 3200, 2800, 'Colère des Profondeurs : peut attaquer une 2ème fois si destruction', 0, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/11.Fusion 8-9.Béhémoth des Abysses.png'),
+(12, 'Golem d’Apocalypse', 'Épique', 3000, 3000, 'Indestructible : revient avec 1500 DEF après destruction', 0, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/12.Fusion 3-5.Golem d’Apocalypse.png'),
+(13, 'Dragon Éclipse Infernale', 'Légendaire', 3500, 2700, 'Flammes d’Éclipse : bannit les monstres détruits', 0, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/13.Fusion 6-10.Dragon Éclipse Infernale.png'),
+(14, 'Roi de la Destruction Totale', 'Légendaire', 3400, 2900, 'Onde de Ruine : inflige 200 dégâts aux ennemis et 100 aux alliés', 0, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/14.Fusion 4-7.Roi de la Destruction Totale.png'),
+(15, 'Dieu du Chaos Céleste', 'Mythique', 4500, 4000, 'Jugement du Chaos : inflige 300 dégâts par carte ennemie en jeu à chaque tour', 0, '/Kingdom-of-Cards/kingdom_of_cards/assets/CARTES/15.Fusion+ 13-14.Chaos Céleste.png');
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `deck`
+-- Table structure for table `fusions`
 --
 
-CREATE TABLE `deck` (
+CREATE TABLE `fusions` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `card_id` int(11) NOT NULL,
-  `position` int(11) NOT NULL
+  `id_carte_resultat` int(11) NOT NULL,
+  `id_carte_1` int(11) NOT NULL,
+  `id_carte_2` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `fusions`
+--
+
+INSERT INTO `fusions` (`id`, `id_carte_resultat`, `id_carte_1`, `id_carte_2`) VALUES
+(1, 11, 8, 9),
+(2, 12, 3, 5),
+(3, 13, 6, 10),
+(4, 14, 7, 4),
+(5, 15, 13, 14);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `inventory`
+-- Table structure for table `joueur_cartes`
 --
 
-CREATE TABLE `inventory` (
+CREATE TABLE `joueur_cartes` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `card_id` int(11) NOT NULL
+  `id_joueur` int(11) NOT NULL,
+  `id_carte` int(11) NOT NULL,
+  `quantite` int(11) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `joueur_cartes`
+--
+
+INSERT INTO `joueur_cartes` (`id`, `id_joueur`, `id_carte`, `quantite`) VALUES
+(105, 2, 1, 1),
+(106, 2, 2, 1),
+(107, 2, 3, 1),
+(108, 2, 4, 1),
+(109, 2, 5, 1),
+(110, 2, 6, 1),
+(111, 2, 7, 1),
+(112, 2, 8, 1),
+(113, 2, 9, 1),
+(114, 2, 10, 1);
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
-  `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `money` int(11) NOT NULL DEFAULT 0
+  `money` int(11) NOT NULL DEFAULT 0,
+  `email` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 --
--- Déchargement des données de la table `users`
+-- Table structure for table `password_resets`
+--
+CREATE TABLE IF NOT EXISTS password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at DATETIME NOT NULL
+);
+--
+-- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `created_at`) VALUES
-(1, 'Kaneki', '$2y$10$UTCJ48g9/D7ZmtfzGytt3uGfLPBa6k9K5gWsVwzsr/8IuvGLOmPUy', '2025-03-11 10:17:24');
+INSERT INTO `users` (`id`, `username`, `password`, `created_at`, `money`, `email`) VALUES
+(1, 'Kaneki', '$2y$10$UTCJ48g9/D7ZmtfzGytt3uGfLPBa6k9K5gWsVwzsr/8IuvGLOmPUy', '2025-03-11 10:17:24', 13000, NULL),
+(2, 'aya', '$2y$10$J48MuOUYLHnIdVIi857NiuO3qILe7UVdLRx04g17HsDsLYAdUmwme', '2025-03-14 18:22:47', 150000, 'aya.azizi.1@ens.etsmtl.ca');
 
 --
--- Index pour les tables déchargées
+-- Indexes for dumped tables
 --
 
 --
--- Index pour la table `cards`
+-- Indexes for table `cartes`
 --
-ALTER TABLE `cards`
+ALTER TABLE `cartes`
   ADD PRIMARY KEY (`id`);
 
 --
--- Index pour la table `deck`
+-- Indexes for table `fusions`
 --
-ALTER TABLE `deck`
+ALTER TABLE `fusions`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `card_id` (`card_id`);
+  ADD KEY `id_carte_resultat` (`id_carte_resultat`),
+  ADD KEY `id_carte_1` (`id_carte_1`),
+  ADD KEY `id_carte_2` (`id_carte_2`);
 
 --
--- Index pour la table `inventory`
+-- Indexes for table `joueur_cartes`
 --
-ALTER TABLE `inventory`
+ALTER TABLE `joueur_cartes`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `card_id` (`card_id`);
+  ADD KEY `id_joueur` (`id_joueur`),
+  ADD KEY `id_carte` (`id_carte`);
 
 --
--- Index pour la table `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `username` (`username`);
 
 --
--- AUTO_INCREMENT pour les tables déchargées
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT pour la table `cards`
+-- AUTO_INCREMENT for table `cartes`
 --
-ALTER TABLE `cards`
+ALTER TABLE `cartes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT pour la table `deck`
+-- AUTO_INCREMENT for table `fusions`
 --
-ALTER TABLE `deck`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `fusions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT pour la table `inventory`
+-- AUTO_INCREMENT for table `joueur_cartes`
 --
-ALTER TABLE `inventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `joueur_cartes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
--- AUTO_INCREMENT pour la table `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Contraintes pour les tables déchargées
+-- Constraints for dumped tables
 --
 
 --
--- Contraintes pour la table `deck`
+-- Constraints for table `fusions`
 --
-ALTER TABLE `deck`
-  ADD CONSTRAINT `deck_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `deck_ibfk_2` FOREIGN KEY (`card_id`) REFERENCES `cards` (`id`);
+ALTER TABLE `fusions`
+  ADD CONSTRAINT `fusions_ibfk_1` FOREIGN KEY (`id_carte_resultat`) REFERENCES `cartes` (`id`),
+  ADD CONSTRAINT `fusions_ibfk_2` FOREIGN KEY (`id_carte_1`) REFERENCES `cartes` (`id`),
+  ADD CONSTRAINT `fusions_ibfk_3` FOREIGN KEY (`id_carte_2`) REFERENCES `cartes` (`id`);
 
 --
--- Contraintes pour la table `inventory`
+-- Constraints for table `joueur_cartes`
 --
-ALTER TABLE `inventory`
-  ADD CONSTRAINT `inventory_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `inventory_ibfk_2` FOREIGN KEY (`card_id`) REFERENCES `cards` (`id`);
-
-
--- --------------------------------------------------------
--- Structure de la table `password_resets`
--- --------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS `password_resets` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
-  `expires_at` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+ALTER TABLE `joueur_cartes`
+  ADD CONSTRAINT `joueur_cartes_ibfk_1` FOREIGN KEY (`id_joueur`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `joueur_cartes_ibfk_2` FOREIGN KEY (`id_carte`) REFERENCES `cartes` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
