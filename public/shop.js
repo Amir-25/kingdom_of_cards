@@ -1,4 +1,3 @@
-//vwbwyevgbywegbvcywuvbcwyvc
 document.addEventListener("DOMContentLoaded", () => {
     const confirmBox = document.getElementById("confirmation");
     const revealBox = document.getElementById("reveal");
