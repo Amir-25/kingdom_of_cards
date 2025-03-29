@@ -121,12 +121,14 @@ function loginUser() {
     
     function saveDeck() {
         global $pdo;
+
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
     
         if (!isset($_SESSION["user_id"])) {
             echo json_encode(["error" => "Non connecté"]);
+            exit;
         }
     
         $data = json_decode(file_get_contents("php://input"), true);
@@ -142,16 +144,18 @@ function loginUser() {
             $position = $entry["position"];
             $filename = basename($src);
     
-            $query = $pdo->prepare("SELECT id FROM cards WHERE image LIKE ?");
+            $query = $pdo->prepare("SELECT id FROM cartes WHERE image_path LIKE ?");
             $query->execute(["%$filename"]);
             $card = $query->fetch();
-    
+
             if ($card) {
                 $stmt->execute([$user_id, $card["id"], $position]);
             }
+
         }
     
         echo json_encode(["success" => "Deck sauvegardé avec succès"]);
+        exit;
     }
     
     function loadDeck() {
@@ -162,14 +166,14 @@ function loginUser() {
     
         if (!isset($_SESSION["user_id"])) {
             echo json_encode(["error" => "Non connecté"]);
-            return;
+            exit;
         }
     
         $user_id = $_SESSION["user_id"];
         $stmt = $pdo->prepare("
-            SELECT d.position, c.image, c.name
+            SELECT d.position, c.image_path, c.nom
             FROM deck d
-            JOIN cards c ON d.card_id = c.id
+            JOIN cartes c ON d.card_id = c.id
             WHERE d.user_id = ?
             ORDER BY d.position ASC
         ");

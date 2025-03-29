@@ -259,7 +259,7 @@ fetch("../api/router.php/load_deck", {
             if (slots[index]) {
                 const newCard = document.createElement("div");
                 newCard.classList.add("card");
-                newCard.innerHTML = `<img src="../${card.image}" alt="${card.name}">`;
+                newCard.innerHTML = `<img src="${card.image_path}" alt="${card.nom}">`;
 
                 newCard.style.width = "120px";
                 newCard.style.height = "180px";

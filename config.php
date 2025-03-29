@@ -1,6 +1,6 @@
 <?php
 $host = "localhost";
-$dbname = "kingdom";
+$dbname = "kingdom_of_cards";
 $username = "root";
 $password = "";
 
