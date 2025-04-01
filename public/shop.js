@@ -1,6 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
     const confirmBox = document.getElementById("confirmation");
     const revealBox = document.getElementById("reveal");
+    const moneySpan = document.getElementById("money");
+
+    // Récupération de l'ID utilisateur
+    const userId = localStorage.getItem("user_id");
+
+    if (!userId) {
+        alert("Utilisateur non connecté (ID manquant)");
+        return;
+    }
+
+    //Récupère le solde à l’ouverture
+    fetch("../api/get_money.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userId })
+    })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                moneySpan.textContent = data.money;
+            } else {
+                alert("Erreur : " + data.message);
+            }
+        });
 
     window.confirmPurchase = function () {
         confirmBox.style.display = "block";
@@ -13,7 +37,11 @@ document.addEventListener("DOMContentLoaded", () => {
     window.confirmBuy = function () {
         confirmBox.style.display = "none";
 
-        fetch("../api/buy.php", { method: "POST" })
+        fetch("../api/buy.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id: userId })
+        })
             .then(r => r.text())
             .then(t => {
                 console.log("Réponse brute de buy.php :", t);
@@ -21,10 +49,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (!data.success) return alert(data.message);
 
-                document.getElementById("money").textContent = data.new_balance;
+                moneySpan.textContent = data.new_balance;
                 revealBox.classList.add("shine-effect");
 
-                // Tirage aléatoire
+                // Tirage aléatoire local (synchronisé avec la réponse du serveur)
                 const cards = [
                     { id: 1, name: "Gobelin Pyromane", file: "gobelin_pyromane.jpg", chance: 62 },
                     { id: 2, name: "Serpent des Sables", file: "serpent_des_sables.jpg", chance: 62 },
@@ -38,16 +66,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     { id: 10, name: "Seigneur du Chaos Abyssal", file: "seigneur_du_chaos_abyssal.jpg", chance: 1 }
                 ];
 
-                const total = cards.reduce((sum, c) => sum + c.chance, 0);
-                let rand = Math.random() * total;
-                let selected;
+                const selected = cards.find(c => c.id === data.card_id);
 
-                for (const c of cards) {
-                    rand -= c.chance;
-                    if (rand <= 0) {
-                        selected = c;
-                        break;
-                    }
+                if (!selected) {
+                    alert("Carte non trouvée localement !");
+                    return;
                 }
 
                 // Déterminer la rareté
@@ -66,12 +89,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (ids.includes(selected.id)) {
                         rarity = label;
                         rarityClass = "rarity-" + label.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, "");
-
                         break;
                     }
                 }
 
-                // Affichage
+                // Affichage visuel
                 const cardDiv = revealBox.querySelector(".cards-reveal");
                 cardDiv.innerHTML = `
                     <h2 class="rarity-label ${rarityClass}">${rarity}</h2>
@@ -83,11 +105,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 revealBox.style.display = "block";
                 revealBox.classList.remove("shine-effect");
 
-                // Envoi de la carte au backend
+                // Enregistrement dans la BD
                 fetch("../api/save_card.php", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
+                        user_id: userId,
                         carte_id: selected.id,
                         carte_nom: selected.name
                     })
@@ -111,16 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     window.closeReveal = function () {
-        document.getElementById("reveal").style.display = "none";
+        revealBox.style.display = "none";
     };
 });
-
-
-
-
-
-
-
-
-
-

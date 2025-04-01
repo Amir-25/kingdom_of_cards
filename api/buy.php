@@ -1,19 +1,17 @@
 <?php
-session_start();
 header('Content-Type: application/json');
 require_once('../config.php');
 
-// Vérifie si l'utilisateur est connecté
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['success' => false, 'message' => 'Utilisateur non connecté']);
+$data = json_decode(file_get_contents("php://input"), true);
+$user_id = $data['user_id'] ?? null;
+$pack_price = 6000;
+
+if (!$user_id) {
+    echo json_encode(['success' => false, 'message' => 'ID utilisateur manquant']);
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
-$pack_price = 10000;
-
 try {
-    // Récupère l'argent du joueur
     $stmt = $pdo->prepare("SELECT money FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $money = $stmt->fetchColumn();
@@ -28,12 +26,9 @@ try {
         exit;
     }
 
-    // Déduction
     $new_balance = $money - $pack_price;
-    $stmt = $pdo->prepare("UPDATE users SET money = ? WHERE id = ?");
-    $stmt->execute([$new_balance, $user_id]);
+    $pdo->prepare("UPDATE users SET money = ? WHERE id = ?")->execute([$new_balance, $user_id]);
 
-    // Liste des cartes (doit correspondre à ton JS)
     $cards = [
         ["id" => 1, "name" => "Gobelin Pyromane", "chance" => 62],
         ["id" => 2, "name" => "Serpent des Sables", "chance" => 62],
@@ -47,10 +42,8 @@ try {
         ["id" => 10, "name" => "Seigneur du Chaos Abyssal", "chance" => 1],
     ];
 
-    // Tirage pondéré
     $total = array_sum(array_column($cards, "chance"));
     $rand = mt_rand(1, $total);
-    $selected = null;
     foreach ($cards as $card) {
         $rand -= $card["chance"];
         if ($rand <= 0) {
@@ -59,12 +52,6 @@ try {
         }
     }
 
-    if (!$selected) {
-        echo json_encode(['success' => false, 'message' => 'Erreur de tirage de carte']);
-        exit;
-    }
-
-    // Retourne les infos pour le JS
     echo json_encode([
         'success' => true,
         'message' => 'Achat effectué',
@@ -75,5 +62,3 @@ try {
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'Erreur : ' . $e->getMessage()]);
 }
-
-
