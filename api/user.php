@@ -2,9 +2,34 @@
 session_start();
 require_once "../config.php";
 
+header('Content-Type: application/json');
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// ROUTEUR AUTOMATIQUE
+$path = $_SERVER['REQUEST_URI'];
+
+if (strpos($path, "register") !== false) {
+    registerUser();
+} elseif (strpos($path, "login") !== false) {
+    loginUser();
+} elseif (strpos($path, "logout") !== false) {
+    logoutUser();
+} elseif (strpos($path, "save_deck") !== false) {
+    saveDeck();
+} elseif (strpos($path, "load_deck") !== false) {
+    loadDeck();
+} elseif (strpos($path, "get_money") !== false) {
+    getMoney();
+} else {
+    echo json_encode(["error" => "Route non reconnue"]);
+    exit;
+}
+
 function registerUser() {
     global $pdo;
     $data = json_decode(file_get_contents("php://input"), true);
+
     $username = trim($data["username"] ?? '');
     $email = trim($data["email"] ?? '');
     $password = trim($data["password"] ?? '');
@@ -44,13 +69,9 @@ function registerUser() {
     $stmt->execute([$username, $email, $hashed]);
     $user_id = $pdo->lastInsertId();
 
-    //Donne les 5 cartes de départ
+    // Donne les cartes de départ
     $starterCards = [
-        1 => 1, // Gobelin Pyromane
-        2 => 1, // Serpent des Sables
-        3 => 1, // Golem Mécanique
-        4 => 1, // Chimère Sanglante
-        5 => 1  // Gardien Spectral
+        1 => 1, 2 => 1, 3 => 1, 4 => 1, 5 => 1
     ];
 
     $stmt = $pdo->prepare("INSERT INTO joueur_cartes (id_joueur, id_carte, quantite) VALUES (?, ?, ?)");
@@ -65,6 +86,7 @@ function registerUser() {
 function loginUser() {
     global $pdo;
     $data = json_decode(file_get_contents("php://input"), true);
+
     $username = trim($data["username"] ?? '');
     $password = trim($data["password"] ?? '');
 
@@ -80,8 +102,7 @@ function loginUser() {
     if ($user && password_verify($password, $user["password"])) {
         $_SESSION["user_id"] = $user["id"];
         $_SESSION["username"] = $user["username"];
-    
-        // Pour Android : on renvoie les infos utiles
+
         echo json_encode([
             "success" => true,
             "user" => [
@@ -96,91 +117,93 @@ function loginUser() {
         exit;
     }
 }
-    function logoutUser() {
-        session_destroy();
-        echo json_encode(["success" => "Déconnexion réussie"]);
+
+function logoutUser() {
+    session_destroy();
+    echo json_encode(["success" => "Déconnexion réussie"]);
+    exit;
+}
+
+function saveDeck() {
+    global $pdo;
+
+    if (!isset($_SESSION["user_id"])) {
+        echo json_encode(["error" => "Non connecté"]);
         exit;
     }
-    
-    // ROUTEUR AUTOMATIQUE
-    $path = $_SERVER['REQUEST_URI'];
-    
-    if (strpos($path, "register") !== false) {
-        registerUser();
-    } elseif (strpos($path, "login") !== false) {
-        loginUser();
-    } elseif (strpos($path, "logout") !== false) {
-        logoutUser();
-    } elseif (strpos($path, "save_deck") !== false) {
-        saveDeck();
-    } elseif (strpos($path, "load_deck") !== false) {
-        loadDeck();
-    } else {
-        echo json_encode(["error" => "Route non reconnue"]);
+
+    $data = json_decode(file_get_contents("php://input"), true);
+    $user_id = $_SESSION["user_id"];
+    $deck = $data["deck"] ?? [];
+
+    $pdo->prepare("DELETE FROM deck WHERE user_id = ?")->execute([$user_id]);
+
+    $stmt = $pdo->prepare("INSERT INTO deck (user_id, card_id, position) VALUES (?, ?, ?)");
+    foreach ($deck as $entry) {
+        $src = $entry["src"];
+        $position = $entry["position"];
+        $filename = basename($src);
+
+        $query = $pdo->prepare("SELECT id FROM cartes WHERE image_path LIKE ?");
+        $query->execute(["%$filename"]);
+        $card = $query->fetch();
+
+        if ($card) {
+            $stmt->execute([$user_id, $card["id"], $position]);
+        }
     }
-    
-    function saveDeck() {
-        global $pdo;
 
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-    
-        if (!isset($_SESSION["user_id"])) {
-            echo json_encode(["error" => "Non connecté"]);
-            exit;
-        }
-    
-        $data = json_decode(file_get_contents("php://input"), true);
-        $user_id = $_SESSION["user_id"];
-        $deck = $data["deck"] ?? [];
-    
-        $pdo->prepare("DELETE FROM deck WHERE user_id = ?")->execute([$user_id]);
-    
-        $stmt = $pdo->prepare("INSERT INTO deck (user_id, card_id, position) VALUES (?, ?, ?)");
-    
-        foreach ($deck as $entry) {
-            $src = $entry["src"];
-            $position = $entry["position"];
-            $filename = basename($src);
-    
-            $query = $pdo->prepare("SELECT id FROM cartes WHERE image_path LIKE ?");
-            $query->execute(["%$filename"]);
-            $card = $query->fetch();
+    echo json_encode(["success" => "Deck sauvegardé avec succès"]);
+    exit;
+}
 
-            if ($card) {
-                $stmt->execute([$user_id, $card["id"], $position]);
-            }
+function loadDeck() {
+    global $pdo;
 
-        }
-    
-        echo json_encode(["success" => "Deck sauvegardé avec succès"]);
+    if (!isset($_SESSION["user_id"])) {
+        echo json_encode(["error" => "Non connecté"]);
         exit;
     }
-    
-    function loadDeck() {
-        global $pdo;
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-    
-        if (!isset($_SESSION["user_id"])) {
-            echo json_encode(["error" => "Non connecté"]);
-            exit;
-        }
-    
-        $user_id = $_SESSION["user_id"];
-        $stmt = $pdo->prepare("
-            SELECT d.position, c.image_path, c.nom
-            FROM deck d
-            JOIN cartes c ON d.card_id = c.id
-            WHERE d.user_id = ?
-            ORDER BY d.position ASC
-        ");
-        $stmt->execute([$user_id]);
-        $deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-        echo json_encode(["deck" => $deck]);
+
+    $user_id = $_SESSION["user_id"];
+
+    $stmt = $pdo->prepare("
+        SELECT d.position, c.image_path, c.nom
+        FROM deck d
+        JOIN cartes c ON d.card_id = c.id
+        WHERE d.user_id = ?
+        ORDER BY d.position ASC
+    ");
+    $stmt->execute([$user_id]);
+    $deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo json_encode(["deck" => $deck]);
+    exit;
+}
+
+function getMoney() {
+    global $pdo;
+
+    $data = json_decode(file_get_contents("php://input"), true);
+    if (!$data || !isset($data["username"]) || empty(trim($data["username"]))) {
+        echo json_encode(["success" => false, "message" => "Nom d'utilisateur manquant"]);
         exit;
     }
-    
+
+    $username = trim($data["username"]);
+
+    $stmt = $pdo->prepare("SELECT money FROM users WHERE username = ?");
+    $stmt->execute([$username]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        echo json_encode(["success" => false, "message" => "Utilisateur introuvable"]);
+        exit;
+    }
+
+    echo json_encode([
+        "success" => true,
+        "money" => (int)$user["money"]
+    ]);
+    exit;
+}
