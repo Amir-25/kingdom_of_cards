@@ -3,13 +3,27 @@ session_start();
 header('Content-Type: application/json');
 require_once('../config.php');
 
-// Vérifie si l'utilisateur est connecté
-if (!isset($_SESSION['user_id'])) {
+// Récupération des données JSON (mobile)
+$input = json_decode(file_get_contents('php://input'), true);
+
+// Vérifie si l'utilisateur est connecté via session (web)
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+} elseif (isset($input['username'])) {
+    // Sinon, cherche l'ID via le username (mobile)
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+    $stmt->execute([$input['username']]);
+    $user = $stmt->fetch();
+    if (!$user) {
+        echo json_encode(['success' => false, 'message' => 'Utilisateur introuvable']);
+        exit;
+    }
+    $user_id = $user['id'];
+} else {
     echo json_encode(['success' => false, 'message' => 'Utilisateur non connecté']);
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
 $pack_price = 10000;
 
 try {
@@ -33,7 +47,7 @@ try {
     $stmt = $pdo->prepare("UPDATE users SET money = ? WHERE id = ?");
     $stmt->execute([$new_balance, $user_id]);
 
-    // Liste des cartes (doit correspondre à ton JS)
+    // Liste des cartes avec leurs chances
     $cards = [
         ["id" => 1, "name" => "Gobelin Pyromane", "chance" => 62],
         ["id" => 2, "name" => "Serpent des Sables", "chance" => 62],
@@ -64,7 +78,7 @@ try {
         exit;
     }
 
-    // Retourne les infos pour le JS
+    // Réponse JSON
     echo json_encode([
         'success' => true,
         'message' => 'Achat effectué',
@@ -75,5 +89,3 @@ try {
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'Erreur : ' . $e->getMessage()]);
 }
-
-
