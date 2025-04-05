@@ -16,7 +16,7 @@ if ($stmt->rowCount() === 0) {
 <head>
     <meta charset="UTF-8">
     <title>Réinitialiser le mot de passe</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../Styles/styles.css">
 </head>
 <body>
     <div class="container">

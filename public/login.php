@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Connexion - Kingdom of Cards</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../Styles/styles.css">
 </head>
 <body>
     <div class="container">

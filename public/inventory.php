@@ -11,7 +11,7 @@ if (!isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <title>Inventaire - Kingdom of Cards</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../Styles/styles.css">
 
     <!-- ce bout doit etre placer dans le css une fois qu'il est bien organisé-->
 
