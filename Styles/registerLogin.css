@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&display=swap');
+
+* {
+    cursor: url('../assets/swordIcon.png') 0 0, auto !important;
+}
+
+
+body {
+    background: url('../assets/registerbg2.png') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Pirata One', cursive;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    position: relative;
+    z-index: 2;
+    width: 90vw;
+    max-width: 420px;
+    margin: 100px auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00bfff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #00bfff;
+}
+
+.container::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    left: -40px;
+    width: calc(100% + 80px);
+    height: calc(100% + 80px);
+    background: url('../assets/contourFormulaire.png') no-repeat center center;
+    background-size: 100% 100%;
+    z-index: -1;
+    pointer-events: none;
+    filter: brightness(0.5);
+
+}
+
+h2 {
+    color: #00bfff;
+    font-size: 35px;
+    text-shadow: 2px 2px 5px rgba(0, 191, 255, 0.8);
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 2px solid #00bfff;
+    font-size: 18px;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    box-shadow: inset 0 0 10px #00bfff;
+    transition: 0.3s ease;
+}
+
+button {
+    margin-top: 20px;
+    background: #00bfff;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #0099ff;
+    box-shadow: 0 0 10px #0099ff;
+}
+
+a {
+    color: #00bfff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    text-shadow: 0 0 10px #00bfff;
+}
+
+.audio-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border: 2px solid #00bfff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #00bfff;
+    display: flex;
+    align-items: center;
+}
+
+.audio-container label {
+    color: #00bfff;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+#audio-player {
+    display: none;
+}
+
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100px;
+    height: 5px;
+    background: #00bfff;
+    border-radius: 5px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.volume-slider:hover {
+    box-shadow: 0 0 10px #00bfff;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.9), rgba(0, 191, 255, 0.6), transparent 80%);
+    z-index: -1;
+    pointer-events: none;
+    animation: lumiere 3s ease-in-out infinite;
+    opacity: 1;
+    filter: blur(90px) brightness(2.5) saturate(2);
+  }
+  
+  @keyframes lumiere {
+    0% {
+      transform: translateX(-50%) translateY(0) scale(1);
+      opacity: 0.9;
+      filter: blur(90px) brightness(2.2);
+    }
+    50% {
+      transform: translateX(-50%) translateY(-20px) scale(1.2);
+      opacity: 1;
+      filter: blur(120px) brightness(3.5);
+    }
+    100% {
+      transform: translateX(-50%) translateY(0) scale(1);
+      opacity: 0.9;
+      filter: blur(90px) brightness(2.2);
+    }
+  }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Connexion - Kingdom of Cards</title>
-    <link rel="stylesheet" href="../Styles/styles.css">
+    <link rel="stylesheet" href="../Styles/registerLogin.css">
 </head>
 <body>
     <div class="container">

@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Pirata+One&display=swap');
 
+* {
+  cursor: url('../assets/swordIcon.png') 0 0, auto !important;
+}
+
 body {
     font-family: 'Pirata One', cursive;
     text-align: center;
@@ -22,7 +26,7 @@ body.fade-out {
     background: url('../assets/intro-bg.jpg') no-repeat center center fixed;
     background-size: cover;
     text-align: center;
-    animation: pulse 30s ease-in-out infinite;
+    animation: zoomDezoom 30s ease-in-out infinite;
   }
   
   video.background-video {
@@ -54,8 +58,8 @@ body.fade-out {
     pointer-events: none;
 }
 
-/* Animation pulsante */
-@keyframes pulse {
+/* Animation zoomDezoom */
+@keyframes zoomDezoom {
     0% { 
       transform: scale(1.05); 
     }

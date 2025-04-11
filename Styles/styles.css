@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Pirata+One&display=swap');
 
+* {
+    cursor: url('../assets/swordIcon.png') 0 0, auto !important;
+}
+
 body {
     background: url('../assets/intro-bg.jpg') no-repeat center center fixed;
     background-size: cover;
