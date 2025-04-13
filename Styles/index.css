@@ -23,7 +23,7 @@ body.fade-out {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('../assets/intro-bg.jpg') no-repeat center center fixed;
+    background: url('../assets/intro-bg2.jpg') no-repeat center center fixed;
     background-size: cover;
     text-align: center;
     animation: zoomDezoom 30s ease-in-out infinite;
