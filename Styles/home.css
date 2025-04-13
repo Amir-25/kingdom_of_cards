@@ -1,0 +1,158 @@
+/* home.css - Style Solo Leveling pour la page d'accueil */
+
+/* Importation de la police Orbitron pour une ambiance high-tech */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+/* Animation de pulsation du fond */
+@keyframes backgroundPulse {
+    0% { filter: brightness(0.95); }
+    50% { filter: brightness(1.05); }
+    100% { filter: brightness(0.95); }
+}
+
+/* Animation pour le contour en pointillé animé */
+@keyframes dash {
+    0% { stroke-dasharray: 10, 5; stroke-dashoffset: 0; }
+    100% { stroke-dasharray: 10, 5; stroke-dashoffset: 100; }
+}
+
+/* On remplace le fond de la page d'accueil par un visuel Solo Leveling */
+body {
+    background: url('../assets/homeBackground.png') no-repeat center center fixed;
+    background-size: cover;
+    animation: backgroundPulse 10s ease-in-out infinite;
+    font-family: 'Orbitron', sans-serif;
+    color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container principal de la page d'accueil */
+.home-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Style du titre principal */
+.home-title {
+    font-size: 40px;
+    color: #ffffff;
+    text-shadow: 3px 3px 10px rgba(4, 0, 255, 0.8);
+    margin-bottom: 30px;
+}
+
+/* Container du menu avec effet high-tech */
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 30px #1100ffa8;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Pseudo-élément pour un contour animé autour du menu */
+.menu::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border: 2px dashed #2566c7b9;
+    border-radius: 15px;
+    opacity: 0.5;
+    pointer-events: none;
+    animation: dash 5s linear infinite;
+}
+
+/* Boutons du menu en mode Solo Leveling */
+.menu-button {
+    font-family: 'Orbitron', sans-serif; /* Même police que le reste de la page */
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff; /* Texte en blanc pour plus de cohérence */
+    background: #1100ffa8;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 0 15px rgba(17, 0, 250, 0.8);
+    width: 300px;
+    text-shadow: 2px 2px 5px rgba(4, 0, 255, 0.8); /* Ajoute un petit effet d'ombre pour le texte */
+}
+
+/* Hover sur les boutons pour l'effet de zoom et de lueur */
+.menu-button:hover {
+    background: #07006d;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #07006d;
+}
+
+/* Spécifique pour le bouton de déconnexion avec un style rouge flashy */
+.logout-button {
+    font-family: 'Orbitron', sans-serif; /* Assure-toi que c'est pareil ici aussi */
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+    background: red !important;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px red;
+    width: 300px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+}
+.logout-button:hover {
+    background: darkred !important;
+    box-shadow: 0 0 20px darkred;
+    transform: scale(1.1);
+}
+
+/* Style de la section audio pour rester cohérent avec le thème Solo Leveling */
+.audio-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 12px 20px;
+    border: 2px solid #1100ffa8;
+    border-radius: 8px;
+    box-shadow: 0 0 15px #1100ffa8;
+    display: flex;
+    align-items: center;
+    z-index: 100;
+}
+
+.audio-container label {
+    font-size: 18px;
+    margin-right: 10px;
+    color: #f0f0f0;
+}
+
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 120px;
+    height: 6px;
+    background: #1100ffa8;
+    border-radius: 3px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.volume-slider:hover {
+    box-shadow: 0 0 10px #1100ffa8;
+}

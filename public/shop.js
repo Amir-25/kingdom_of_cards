@@ -35,9 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     { id: 7, name: "Chevalier de la Faille", file: "chevalier_de_la_faille.jpg", chance: 12 },
                     { id: 8, name: "Roi des Profondeurs", file: "roi_des_profondeurs.jpg", chance: 5 },
                     { id: 9, name: "Titan du Néant", file: "titan_du_neant.jpg", chance: 5 },
-                    { id: 10, name: "Seigneur du Chaos Abyssal", file: "seigneur_du_chaos_abyssal.jpg", chance: 1 }
-                ];
+                    { id: 10, name: "Seigneur du Chaos Abyssal", file: "seigneur_du_chaos_abyssal.jpg", chance: 1 },
+                    { id: 17, name: "Spectre de Givre", file: "spectre_de_givre.jpg", chance: 22 },
+                    { id: 18, name: "Samouraï d’Ombre", file: "samourai_d’ombre.jpg", chance: 12 },
+                    { id: 19, name: "Héraut de l’Apocalypse", file: "héraut_de_l’apocalypse.jpg", chance: 5 }
 
+                ];
                 const total = cards.reduce((sum, c) => sum + c.chance, 0);
                 let rand = Math.random() * total;
                 let selected;
@@ -53,9 +56,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Déterminer la rareté
                 const rarityMap = {
                     Commun: [1, 2, 3],
-                    Rare: [4, 5],
-                    "Très Rare": [6, 7],
-                    Épique: [8, 9],
+                    Rare: [4, 5, 17],
+                    "Très Rare": [6, 7, 18],
+                    Épique: [8, 9, 19],
                     Légendaire: [10]
                 };
 

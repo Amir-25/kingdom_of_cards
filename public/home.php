@@ -11,7 +11,7 @@ if (!isset($_SESSION["user_id"])) {
 <head>
     <meta charset="UTF-8">
     <title>Kingdom of Cards - Accueil</title>
-    <link rel="stylesheet" href="../Styles/styles.css">
+    <link rel="stylesheet" href="../Styles/home.css">
 </head>
 <body>
     <div class="home-container">
@@ -23,6 +23,7 @@ if (!isset($_SESSION["user_id"])) {
             <button class="menu-button" onclick="location.href='inventory.php'">🃏 Préparer Inventaire</button>
 
             <button class="menu-button" onclick="location.href='shop.php'">💰 Magasin</button>
+            <button class="menu-button" onclick="location.href='boss_mode.php'">👹 Combat contre Boss</button>
             <!-- On retire le onclick pour la déconnexion et on ajoute un id -->
             <button class="menu-button logout-button" id="logout-btn">🚪 Se Déconnecter</button>
 
