@@ -24,7 +24,7 @@ if (isset($_SESSION['user_id'])) {
     exit;
 }
 
-$pack_price = 10000;
+$pack_price = 6000;
 
 try {
     // Récupère l'argent du joueur
@@ -59,6 +59,9 @@ try {
         ["id" => 8, "name" => "Roi des Profondeurs", "chance" => 5],
         ["id" => 9, "name" => "Titan du Néant", "chance" => 5],
         ["id" => 10, "name" => "Seigneur du Chaos Abyssal", "chance" => 1],
+        ["id" => 17, "name" => "Spectre de Givre", "chance" => 62],
+        ["id" => 18, "name" => "Samouraï d’Ombre", "chance" => 20],
+        ["id" => 19, "name" => "Héraut de l’Apocalypse", "chance" => 12],
     ];
 
     // Tirage pondéré

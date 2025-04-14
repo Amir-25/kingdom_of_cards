@@ -7,7 +7,7 @@
 </head>
 <body>
     <div class="intro-container" id="introContainer" onclick="startGame()">
-        <video id="introVideo" class="background-video" src="../assets/castle.mp4" preload="auto"></video>
+        <video id="introVideo" class="background-video" src="../assets/castle2.mp4" preload="auto"></video>
         <img src="../assets/logoIndex.png" alt="Logo Kingdom of Cards" id="intro-logo">
         <div class="intro-text" id="introText">Appuyez pour entrer dans le royaume ...</div>
     </div>
