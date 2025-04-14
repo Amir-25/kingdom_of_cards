@@ -123,6 +123,27 @@ body {
     display: block;
 }
 
+.boss-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0 auto;
+    box-shadow: 0 0 15px #00bfff;
+    width: 320px;
+    height: 100px;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+}
+
+.boss-button img.iconBoss {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 .icon {
     width: 130px;
     height: 130px;
