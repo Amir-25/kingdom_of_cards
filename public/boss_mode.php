@@ -15,11 +15,12 @@ $stmt = $pdo->prepare("
 $stmt->execute([$user_id]);
 $user_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Deck adverse (10 premières cartes)
-$stmt = $pdo->query("
-    SELECT id, nom, image_path, attaque, defense, rarete, effet, fusionnable 
-    FROM cartes ORDER BY id LIMIT 10
+/// Deck du Boss (Pierre Belisle uniquement)
+$stmt = $pdo->prepare("
+SELECT id, nom, image_path, attaque, defense, rarete, effet, fusionnable 
+FROM cartes WHERE id = ?
 ");
+$stmt->execute([16]);
 $opponent_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -33,7 +34,7 @@ $opponent_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background: url('../assets/arene.jpg') no-repeat center center fixed;
+            background: url('../assets/arene2.jpg') no-repeat center center fixed;
             background-size: cover; /* très important pour couvrir toute la page */
             height: 100vh;
             width: 100vw;
@@ -49,7 +50,7 @@ $opponent_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .action-buttons {
             position:absolute;top:50%;right:20px;display:flex;flex-direction:column;gap:10px;
         }
-        .action-buttons button {
+.action-buttons button {
     background: linear-gradient(145deg, #121212, #1c1c1c);
     border: 2px solid #00ffcc;
     border-radius: 10px;
@@ -128,17 +129,15 @@ $opponent_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="timer">Temps restant : <span id="timer">60</span>s</div>
 
-<div class="pv" id="opponent-pv">Adversaire : <span id="opponent-life">9000</span> PV</div>
-<div class="pv" id="user-pv">Toi : <span id="user-life">9000</span> PV</div>
+<div class="pv" id="opponent-pv">Adversaire : <span id="opponent-life">10000</span> PV</div>
+<div class="pv" id="user-pv">Toi : <span id="user-life">15000</span> PV</div>
 
-<!-- Slots adversaire -->
-<div class="slots" id="opponent-slots" style="margin-top:10px;">
-    <?php for ($i=0; $i<10; $i++): ?><div class="card-slot"></div><?php endfor; ?>
-</div>
+
+
 
 <!-- Arène adversaire -->
 <div class="slots" id="opponent-arena" style="margin-top:10px;">
-    <?php for ($i=0; $i<4; $i++): ?><div class="card-slot"></div><?php endfor; ?>
+    <div class="card-slot" style="background-image:url('<?= $opponent_deck[0]['image_path'] ?>');" data-index="0"></div>
 </div>
 
 <!-- Arène joueur -->
@@ -161,8 +160,17 @@ $opponent_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 <audio id="audio-player" loop autoplay>
-        <source src="../assets/solo_mode.mp3" type="audio/mpeg">
-    </audio>
+    <source src="../assets/arene2.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="boss-audio">
+    <source src="../assets/boss.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="effet-audio">
+    <source src="../assets/effet.mp3" type="audio/mpeg">
+</audio>
+
 
     <div class="audio-container">
         <label for="volume">🎵 Volume :</label>
@@ -174,10 +182,12 @@ $opponent_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <script>
 const userDeck=<?= json_encode($user_deck); ?>;
 const opponentDeck=<?= json_encode($opponent_deck); ?>;
-let joueurActuel=Math.random()<0.5?'user':'opponent';
-alert((joueurActuel==='user'?'Toi':'Ton adversaire')+" commence le match !");
+let joueurActuel = 'user';
+alert("Tu commences le match contre Pierre Belisle !");
+let tourBoss = 0; 
 
-let userPV=9000,opponentPV=9000;
+let userPV = 15000, opponentPV = <?= $opponent_deck[0]['defense'] ?>;
+document.getElementById('opponent-life').textContent = opponentPV;
 
 let timeLeft=60,timerElement=document.getElementById('timer');
 timerElement.textContent=timeLeft;
@@ -200,12 +210,6 @@ let enAttaqueOpponent = false;
 function updateTimer(){
     if(timeLeft>0){timeLeft--;timerElement.textContent=timeLeft;}
     else{changeTurn();}
-}
-
-function changeTurn(){
-    joueurActuel=joueurActuel==='user'?'opponent':'user';
-    alert("Tour de : "+(joueurActuel==='user'?'Toi':'Ton adversaire'));
-    timeLeft=60;timerElement.textContent=timeLeft;
 }
 
 function afficher(deck,slots){
@@ -257,10 +261,8 @@ function addDrop(arena, deck, role, deckData){
 
 
 addDrag(document.querySelectorAll("#user-slots .card-slot"),'user');
-addDrag(document.querySelectorAll("#opponent-slots .card-slot"),'opponent');
 // Appel exact (à remplacer par le nouveau appel clair avec le deckData) :
 addDrop(document.querySelectorAll("#user-arena .card-slot"), document.querySelectorAll("#user-slots .card-slot"), 'user', userDeck);
-addDrop(document.querySelectorAll("#opponent-arena .card-slot"), document.querySelectorAll("#opponent-slots .card-slot"), 'opponent', opponentDeck);
 
 document.getElementById('end-turn').onclick=changeTurn;
 
@@ -365,47 +367,53 @@ document.querySelectorAll("#opponent-arena .card-slot").forEach(slot => {
         if (!card) return;
 
         if (enAttaque && joueurActuel === 'user') {
-            // Logique d'attaque
-            enAttaque = false;
+    enAttaque = false;
 
-            if (cardToAttackWith.attaque > card.defense) {
-                alert(`Tu as détruit "${card.nom}" adverse !`);
-                slot.style.backgroundImage = '';
-                opponentPV -= (cardToAttackWith.attaque - card.defense);
-                document.getElementById('opponent-life').textContent = opponentPV;
+    alert(`Tu attaques Pierre Belisle avec "${cardToAttackWith.nom}" !`);
 
-            } else if (cardToAttackWith.attaque < card.defense) {
-                alert(`Ta carte "${cardToAttackWith.nom}" a été détruite.`);
-                // Supprimer la carte du joueur
-                document.querySelectorAll("#user-arena .card-slot").forEach(s => {
-                    if (s.style.backgroundImage.includes(cardToAttackWith.image_path.split('/').pop())) {
-                        s.style.backgroundImage = '';
-                    }
-                });
+    opponentPV -= cardToAttackWith.attaque;
+    document.getElementById('opponent-life').textContent = Math.max(opponentPV, 0);
 
-            } else { // Égalité
-                alert(`Les deux cartes "${cardToAttackWith.nom}" et "${card.nom}" ont été détruites !`);
-                slot.style.backgroundImage = '';
-                document.querySelectorAll("#user-arena .card-slot").forEach(s => {
-                    if (s.style.backgroundImage.includes(cardToAttackWith.image_path.split('/').pop())) {
-                        s.style.backgroundImage = '';
-                    }
-                });
+    if (cardToAttackWith.attaque < opponentDeck[0].defense) {
+        alert(`Ta carte "${cardToAttackWith.nom}" a été détruite en attaquant Pierre Belisle.`);
+        document.querySelectorAll("#user-arena .card-slot").forEach(s => {
+            if (s.style.backgroundImage.includes(cardToAttackWith.image_path.split('/').pop())) {
+                s.style.backgroundImage = '';
             }
+        });
+    } else {
+        alert(`Ta carte "${cardToAttackWith.nom}" survit à l'attaque.`);
+    }
 
-            cardToAttackWith = null;
-            canAttackThisTurn = false;
+    cardToAttackWith = null;
+    canAttackThisTurn = false;
+    document.querySelectorAll(".card-slot.selected").forEach(s => s.classList.remove('selected'));
 
-            document.querySelectorAll(".card-slot.selected").forEach(s => s.classList.remove('selected'));
-
-            // Vérification de la fin de partie
-            if (opponentPV <= 0) {
-                alert("Bravo ! Tu as gagné la partie !");
-                setTimeout(() => { window.location.href = "home.php"; }, 1000);
-            }
-
-            return;
+    if (opponentPV <= 0) {
+    alert("Bravo ! Tu as vaincu Pierre Belisle !");
+    
+    // Appel AJAX vers un fichier PHP pour ajouter l'argent
+    fetch('../api/reward_boss_win.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({reward: 300000})
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Tu as gagné 300000 💰 !");
+        } else {
+            console.warn("Erreur de reward :", data.error);
         }
+        setTimeout(() => {
+            window.location.href = "home.php";
+        }, 1000);
+    });
+    
+    return;
+}
+
+}
 
         if (joueurActuel !== 'opponent') return;
 
@@ -499,22 +507,90 @@ document.getElementById('fusion-btn').onclick = () => {
     .catch(e => console.error("Erreur fusion:", e));
 };
 
+
+let effetBossActif = false;
+
 function changeTurn(){
     joueurActuel = joueurActuel === 'user' ? 'opponent' : 'user';
-    alert("Tour de : " + (joueurActuel === 'user' ? 'Toi' : 'Ton adversaire'));
+    alert("Tour de : " + (joueurActuel === 'user' ? 'Toi' : 'Pierre Belisle'));
     timeLeft = 60;
     timerElement.textContent = timeLeft;
 
-    // Désélectionner toutes les cartes automatiquement
     document.querySelectorAll(".card-slot.selected").forEach(slot => slot.classList.remove('selected'));
-
-    // Réinitialisation complète des sélections
     selectedCards = [];
-    opponentSelectedCards = [];
     cardToAttackWith = null;
-    opponentCardToAttackWith = null;
     canAttackThisTurn = true;
+
+    if (joueurActuel === 'opponent') {
+        tourBoss++;
+
+        if (tourBoss === 1) {
+            alert("Pierre Belisle t'observe et n'attaque pas ce tour !");
+            setTimeout(changeTurn, 2000);
+            return;
+        }
+
+        // Effet spécial (3ᵉ tour du boss)
+        if (tourBoss === 3) {
+            document.getElementById('effet-audio').play().catch(e => console.warn("Audio effet non lancé :", e));
+            alert("Pierre Belisle active son effet : ATK de tes cartes à 0 pendant 60 s durant ton prochain tour !");
+            effetBossActif = true;
+        }
+
+
+        setTimeout(bossAttaque, 1000);
+    } else if (effetBossActif) {
+        userDeck.forEach(carte => carte.attaqueOriginale = carte.attaque);
+        userDeck.forEach(carte => carte.attaque = 0);
+        setTimeout(() => {
+            userDeck.forEach(carte => carte.attaque = carte.attaqueOriginale);
+            effetBossActif = false;
+            alert("L'effet de Pierre Belisle est terminé. Tes cartes récupèrent leur ATK.");
+        }, 60000); // Durée exacte d'un tour joueur (60 sec)
+    }
 }
+
+function bossAttaque() {
+    
+    document.getElementById('boss-audio').play().catch(e => console.warn("Audio boss non lancé :", e));
+    
+    let cartesJoueur = Array.from(document.querySelectorAll("#user-arena .card-slot"))
+        .filter(slot => slot.style.backgroundImage !== '');
+
+    if(cartesJoueur.length > 0) {
+        cartesJoueur.sort((a,b) => {
+            const idxA = a.dataset.index;
+            const idxB = b.dataset.index;
+            return userDeck[idxA].defense - userDeck[idxB].defense;
+        });
+        let cartePlusFaible = cartesJoueur[0];
+        const idx = cartePlusFaible.dataset.index;
+        const carte = userDeck[idx];
+
+        if(opponentDeck[0].attaque > carte.defense){
+            alert(`Pierre Belisle a détruit ta carte "${carte.nom}" !`);
+            cartePlusFaible.style.backgroundImage = '';
+            userPV -= opponentDeck[0].attaque - carte.defense;
+        } else {
+            alert(`Ta carte "${carte.nom}" résiste à l'attaque !`);
+        }
+
+    } else {
+        userPV -= opponentDeck[0].attaque;
+        alert(`Pierre Belisle attaque directement tes PV (${opponentDeck[0].attaque} dégâts) !`);
+    }
+
+    document.getElementById('user-life').textContent = Math.max(userPV, 0);
+
+    if (userPV <= 0) {
+        alert("Pierre Belisle t'a vaincu !");
+        setTimeout(() => { window.location.href = "home.php"; }, 1000);
+    } else {
+        setTimeout(changeTurn, 2000);
+    }
+}
+
+
 
 document.querySelectorAll("#user-arena .card-slot").forEach(slot => {
     slot.onclick = (e) => {

@@ -18,13 +18,13 @@ if (!isset($_SESSION["user_id"])) {
         <video id="versusVideo" class="versus-video" src="../assets/versus.mp4" preload="auto"></video>
         <h1 class="home-title" id="home-title">👑 Kingdom of Cards 👑</h1>
 
-        <div class="menu" id="menu">
-            <div class="grid-buttons">
-                <button class="menu-button" onclick="location.href='matchmaking.php'"><img src="../assets/iconeEnLigne.png" class="icon" alt="En ligne"></button>
-                <button class="menu-button" onclick="startVersus()"><img src="../assets/iconeSolo.png" class="icon" alt="Solo"></button>
-                <button class="menu-button" onclick="location.href='inventory.php'"><img src="../assets/iconeInventaire.png" class="icon" alt="Inventaire"></button>
-                <button class="menu-button" onclick="location.href='shop.php'"><img src="../assets/iconeMagasin.png" class="icon" alt="Magasin"></button>
-            </div>
+        <div class="menu">
+            <button class="menu-button" onclick="location.href='matchmaking.php'">🎴 Trouver un adversaire</button>
+            <button class="menu-button" onclick="location.href='solo_mode.php'">⚔️ Mode Solo</button>
+            <button class="menu-button" onclick="location.href='inventory.php'">🃏 Préparer Inventaire</button>
+
+            <button class="menu-button" onclick="location.href='shop.php'">💰 Magasin</button>
+            <button class="menu-button" onclick="location.href='boss_mode.php'">👹 Combat contre Boss</button>
             <!-- On retire le onclick pour la déconnexion et on ajoute un id -->
             <button class="menu-button logout-button" id="logout-btn"><img src="../assets/iconeDeconnecter.png" class="iconDeconnecter" alt="Deconnecter"></button>
 
