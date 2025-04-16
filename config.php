@@ -5,7 +5,7 @@ $username = "adminkingdom";
 $password = "kingdom123?"; 
 
 // téléchargé depuis Azure
-$ssl_cert_path = "C:\xampp\htdocs\kingdom_of_cards\certifs\DigiCertGlobalRootCA.crt.pem";
+$ssl_cert_path = "C:/xampp/htdocs/kingdom_of_cards/certifs/DigiCertGlobalRootCA.crt.pem";
 
 try {
     // Connexion sécurisée avec certificat SSL
