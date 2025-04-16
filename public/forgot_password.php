@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Mot de passe oublié</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../Styles/styles.css">
 </head>
 <body>
     <div class="container">

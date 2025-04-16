@@ -120,7 +120,7 @@ function loginUser() {
 
 function logoutUser() {
     session_destroy();
-    echo json_encode(["success" => "Déconnexion réussie"]);
+    echo json_encode(["success" => "Déconnexion..."]);
     exit;
 }
 

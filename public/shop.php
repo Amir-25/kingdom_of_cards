@@ -11,7 +11,7 @@ if (!isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <title>Shop - Kingdom of Cards</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../Styles/styles.css">
 </head>
 <body class="shop-page">
     <!-- BARRE SHOP -->

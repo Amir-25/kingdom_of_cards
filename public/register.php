@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Inscription - Kingdom of Cards</title>
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../Styles/registerLogin.css">
 </head>
 <body>
     <div class="container">
@@ -72,3 +72,17 @@
     <script src="audio.js"></script>
 </body>
 </html>
+
+
+
+<script>
+  for (let i = 0; i < 50; i++) {
+    let p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.top = Math.random() * 100 + 'vh';
+    p.style.animationDuration = 3 + Math.random() * 5 + 's';
+    p.style.animationDelay = Math.random() * 5 + 's';
+    document.body.appendChild(p);
+  }
+</script>
