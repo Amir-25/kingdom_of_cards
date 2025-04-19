@@ -11,67 +11,8 @@ if (!isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <title>Inventaire - Kingdom of Cards</title>
-    <link rel="stylesheet" href="../Styles/styles.css">
+    <link rel="stylesheet" href="../Styles/inventory.css">
 
-    <!-- ce bout doit etre placer dans le css une fois qu'il est bien organisé-->
-
-    <style>
-    
-    .deck-section {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 50px;
-    margin-top: 40px;
-}
-
-
-#boutons_inv {
-    position: absolute;      /* ou relative si tu veux qu’il se déplace dans un bloc parent */
-    top: 230px;              /* ajuste verticalement */
-    left: 1250px;              /* ajuste horizontalement */
-
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-
-
-    button {
-        width: 200px; /* Définit une largeur fixe pour tous les boutons */
-        padding: 8px 12px;
-        font-size: 14px;
-        cursor: pointer;
-        background-color: rgba(255, 215, 0, 0.6);
-        color: white;
-        border: 2px solid gold;
-        border-radius: 5px;
-        transition: all 0.3s ease;
-        box-shadow: none;
-    }
-
-    #remove-card:disabled {
-        background-color: #ccc;
-        color: #666;
-        border: 2px solid #aaa;
-        cursor: not-allowed;
-    }
-
-    #remove-card:hover:not(:disabled), #save-deck:hover, .back-button:hover {
-        background-color: gold;
-        color: black;
-        box-shadow: 0 0 10px gold;
-    }
-
-    .selected-slot {
-        border: 3px solid gold;
-        border-radius: 8px;
-        transform: scale(1.05);
-        transition: all 0.3s ease;
-        box-shadow: 0 0 20px gold;
-    }
-</style>
 
 
 </head>
