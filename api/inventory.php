@@ -27,12 +27,23 @@ try {
 
     //  Récupère les cartes de l’utilisateur
     $stmt = $pdo->prepare("
-        SELECT c.id, c.nom AS name, c.image_path AS image, jc.quantite AS quantity
-        FROM joueur_cartes jc
-        JOIN cartes c ON jc.id_carte = c.id
-        WHERE jc.id_joueur = ?
-    ");
-    $stmt->execute([$userId]);
+    SELECT 
+        c.id, 
+        c.nom AS name, 
+        c.image_path AS image, 
+        (jc.quantite - IFNULL(d.nb_dans_deck, 0)) AS quantity
+    FROM joueur_cartes jc
+    JOIN cartes c ON jc.id_carte = c.id
+    LEFT JOIN (
+        SELECT card_id, COUNT(*) AS nb_dans_deck
+        FROM deck
+        WHERE user_id = ?
+        GROUP BY card_id
+    ) d ON jc.id_carte = d.card_id
+    WHERE jc.id_joueur = ?
+    HAVING quantity > 0
+");
+    $stmt->execute([$userId, $userId]);
     $cartes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode($cartes);

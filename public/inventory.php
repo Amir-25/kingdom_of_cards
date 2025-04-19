@@ -196,29 +196,41 @@ document.querySelectorAll(".slot").forEach(slot => {
     });
 });
 
-document.getElementById("remove-card").addEventListener("click", () => {
+document.getElementById("remove-card").addEventListener("click", async () => {
     if (selectedSlot && selectedSlot.firstChild) {
         const card = selectedSlot.querySelector(".card");
         const imgSrc = card.querySelector("img").getAttribute("src");
         const altText = card.querySelector("img").getAttribute("alt");
 
-        // creeer une nouvelle carte dans la liste
-        const newCard = document.createElement("div");
-        newCard.classList.add("card");
-        newCard.innerHTML = `<img src="${imgSrc}" alt="${altText}">`;
-        document.querySelector(".card-list").appendChild(newCard);
-
-        newCard.draggable = true;
-        newCard.addEventListener("dragstart", function (e) {
-            e.dataTransfer.setData("text/plain", newCard.outerHTML);
-        });
-
-        // vider le slot
+        // Vider le slot côté visuel
         selectedSlot.innerHTML = "";
         selectedSlot.classList.remove("selected-slot");
         document.getElementById("remove-card").disabled = true;
+
+        // Ajouter côté interface
+        const existing = [...document.querySelectorAll(".card")].find(c => c.querySelector("img").alt === altText);
+        if (existing) {
+            let qte = parseInt(existing.dataset.quantity);
+            qte++;
+            existing.dataset.quantity = qte;
+            existing.querySelector(".card-count span").textContent = "x" + qte;
+        } else {
+            const newCard = createCardElement(altText, imgSrc, 1);
+            document.querySelector(".card-list").appendChild(newCard);
+            setupDragAndDrop();
+        }
+
+        // Mise à jour en base de données
+        await fetch("../api/save_card.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                carte_nom: altText
+            })
+        });
     }
 });
+
 
 document.getElementById("save-deck").addEventListener("click", async () => {
     const slots = document.querySelectorAll(".slot");

@@ -138,20 +138,57 @@ function saveDeck() {
 
     $pdo->prepare("DELETE FROM deck WHERE user_id = ?")->execute([$user_id]);
 
-    $stmt = $pdo->prepare("INSERT INTO deck (user_id, card_id, position) VALUES (?, ?, ?)");
-    foreach ($deck as $entry) {
-        $src = $entry["src"];
-        $position = $entry["position"];
-        $filename = basename($src);
-
-        $query = $pdo->prepare("SELECT id FROM cartes WHERE image_path LIKE ?");
-        $query->execute(["%$filename"]);
-        $card = $query->fetch();
-
-        if ($card) {
-            $stmt->execute([$user_id, $card["id"], $position]);
-        }
+    if (empty($deck)) {
+        echo json_encode(["error" => "Aucune carte à sauvegarder"]);
+        exit;
     }
+        $cardCounts = [];
+        foreach ($deck as $entry) {
+            $filename = basename($entry["src"]);
+            $cardCounts[$filename] = ($cardCounts[$filename] ?? 0) + 1;
+        }
+
+       
+        $pdo->prepare("DELETE FROM deck WHERE user_id = ?")->execute([$user_id]);
+
+        $stmt = $pdo->prepare("INSERT INTO deck (user_id, card_id, position) VALUES (?, ?, ?)");
+        $seen = [];
+
+        foreach ($deck as $entry) {
+            $src = $entry["src"];
+            $position = $entry["position"];
+            $filename = basename($src);
+
+            $query = $pdo->prepare("SELECT id FROM cartes WHERE image_path LIKE ?");
+            $query->execute(["%$filename"]);
+            $card = $query->fetch();
+
+            if ($card) {
+                $cardId = $card["id"];
+                $stmt->execute([$user_id, $cardId, $position]);
+
+                if (!isset($seen[$cardId])) {
+                    $seen[$cardId] = 0;
+                }
+
+                if ($seen[$cardId] < $cardCounts[$filename]) {
+                    $seen[$cardId]++;
+
+                    $check = $pdo->prepare("SELECT quantite FROM joueur_cartes WHERE id_joueur = ? AND id_carte = ?");
+                    $check->execute([$user_id, $cardId]);
+                    $owned = $check->fetchColumn();
+
+                    if ($owned > $seen[$cardId]) {
+                        $pdo->prepare("UPDATE joueur_cartes SET quantite = quantite - 1 WHERE id_joueur = ? AND id_carte = ?")
+                            ->execute([$user_id, $cardId]);
+                    } else {
+                        $pdo->prepare("DELETE FROM joueur_cartes WHERE id_joueur = ? AND id_carte = ?")
+                            ->execute([$user_id, $cardId]);
+                    }
+                }
+            }
+        }
+
 
     echo json_encode(["success" => "Deck sauvegardé avec succès"]);
     exit;
