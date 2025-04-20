@@ -17,15 +17,18 @@ if (!isset($_SESSION['username'])) {
 
 </head>
 <body>
+    <h1 class="titre-inventaire">Inventaire</h1>
 
     <!-- Slots pour le deck -->
     <div class="deck-section">
+    <div class="deck-container">
+    <img src="../assets/pierre.PNG" class="deck-background" alt="fond pierre">   
     <div class="deck-slots">
         <?php for ($i = 0; $i < 10; $i++): ?>
             <div class="slot"></div>
         <?php endfor; ?>
     </div>
-
+    </div>
     <div id="boutons_inv">
         <div class="remove-button-container">
             <button id="remove-card" disabled>Retirer la carte</button>

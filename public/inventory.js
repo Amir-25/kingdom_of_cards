@@ -117,30 +117,7 @@ function setupDragAndDrop() {
                 card.querySelector(".card-count span").textContent = "x" + qte;
             }
         });
-        
-
-        slot.addEventListener("click", () => {
-            const card = slot.querySelector(".in-slot");
-            if (!card) return;
-
-            const name = card.dataset.name;
-            const image = card.dataset.image;
-
-            // Retour dans l’inventaire
-            const existing = [...document.querySelectorAll(".card")].find(c => c.dataset.name === name && !c.classList.contains("in-slot"));
-            if (existing) {
-                let qte = parseInt(existing.dataset.quantity);
-                qte++;
-                existing.dataset.quantity = qte;
-                existing.querySelector(".card-count span").textContent = "x" + qte;
-            } else {
-                const cardDiv = createCardElement(name, image, 1);
-                document.querySelector(".card-list").appendChild(cardDiv);
-                setupDragAndDrop(); // Reconnecter les événements
-            }
-
-            slot.innerHTML = "";
-        });
+    
     });
 }
 
