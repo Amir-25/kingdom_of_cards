@@ -1,0 +1,17 @@
+{
+    "name": "najib/kingdom_of_cards",
+    "autoload": {
+        "psr-4": {
+            "Najib\\KingdomOfCards\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kaneki0214",
+            "email": "najibtahiri0214@gmail.com"
+        }
+    ],
+    "require": {
+        "cboden/ratchet": "^0.4.4"
+    }
+}

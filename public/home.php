@@ -20,7 +20,7 @@ if (!isset($_SESSION["user_id"])) {
 
         <div class="menu" id="menu">
             <div class="grid-buttons">
-                <button class="menu-button" onclick="location.href='matchmaking.php'"><img src="../assets/iconeEnLigne.png" class="icon" alt="En ligne"></button>
+                <button class="menu-button" id="playOnline"><img src="../assets/iconeEnLigne.png" class="icon" alt="En ligne"></button>
                 <button class="menu-button" onclick="startVersus()"><img src="../assets/iconeSolo.png" class="icon" alt="Solo"></button>
                 <button class="menu-button" onclick="location.href='inventory.php'"><img src="../assets/iconeInventaire.png" class="icon" alt="Inventaire"></button>
                 <button class="menu-button" onclick="location.href='shop.php'"><img src="../assets/iconeMagasin.png" class="icon" alt="Magasin"></button>
@@ -31,6 +31,9 @@ if (!isset($_SESSION["user_id"])) {
 
         </div>
     </div>
+
+    <div id="statusMsg"></div>
+
     <audio id="audio-player" loop autoplay>
         <source src="../assets/home.mp3" type="audio/mpeg">
         Votre navigateur ne supporte pas l'audio.
@@ -82,5 +85,74 @@ if (!isset($_SESSION["user_id"])) {
         }, 4000); 
     }
     </script>
+
+<script>
+document.getElementById('playOnline').addEventListener('click', function () {
+    // 2.a Établir la connexion WebSocket vers le serveur Ratchet
+    // Construire l'URL WebSocket : on utilise le même host que la page, avec le port du serveur WS
+    const host = window.location.hostname; 
+    
+    //const socket = new WebSocket('ws://' + host + ':8080');  // utilisez 'wss://' si SSL/TLS
+
+    const socket = new WebSocket('ws://192.168.0.181:8080'); //Remplace 192.168.1.42 par l’IP réelle que tu as 
+
+    // (Optionnel) Indiquer à l'utilisateur que la recherche de match a commencé
+    const statusDiv = document.getElementById('statusMsg');
+    if (statusDiv) {
+        statusDiv.textContent = 'Connexion au serveur de jeu...';
+    }
+
+    // 2.b Gérer l'ouverture de la connexion
+    socket.onopen = function () {
+        console.log('Connecté au serveur de matchmaking.');
+        if (statusDiv) {
+            statusDiv.textContent = 'En attente d’un autre joueur...';
+        }
+        // A l'ouverture, notre serveur nous place automatiquement en file d'attente.
+        // (Pas besoin d'envoyer un message "join", sauf si on souhaitait transmettre des infos supplémentaires.)
+    };
+
+    // Gérer la réception des messages du serveur WebSocket
+    socket.onmessage = function (event) {
+        try {
+            const data = JSON.parse(event.data);
+            console.log('Message reçu du serveur :', data);
+            if (data.action === 'status') {
+                // Mise à jour de statut (attente, etc.)
+                if (statusDiv) {
+                    statusDiv.textContent = data.message || '';
+                }
+            } else if (data.action === 'matchFound') {
+                // 2.c Match trouvé : rediriger vers la page de combat avec l'ID de match
+                const matchId = data.matchId;
+                if (statusDiv) {
+                    statusDiv.textContent = 'Match trouvé ! Redirection en cours...';
+                }
+                // Rediriger vers battle.php en passant l'identifiant de match dans l'URL
+                window.location.href = 'battle.php?match=' + encodeURIComponent(matchId);
+            }
+        } catch (e) {
+            console.error('Erreur de traitement du message WebSocket:', e);
+        }
+    };
+
+    // Gérer la fermeture de la connexion (par le serveur ou en cas d’erreur)
+    socket.onclose = function () {
+        console.log('Connexion au serveur de matchmaking fermée.');
+        // Si la fermeture survient avant qu'un match ne soit trouvé, on peut informer l'utilisateur
+        if (statusDiv && !statusDiv.textContent.includes('Match trouvé')) {
+            statusDiv.textContent = 'La connexion au serveur de jeu a été fermée. Veuillez réessayer.';
+        }
+    };
+
+    // Gérer les erreurs de la connexion WebSocket
+    socket.onerror = function (error) {
+        console.error('WebSocket error:', error);
+        // On peut afficher un message d'erreur à l'utilisateur
+    };
+});
+</script>
+
+
 </body>
 </html>
