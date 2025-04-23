@@ -5,7 +5,7 @@ require_once "user.php";
 
 // Récupère l'URI demandée et le chemin du script
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$base = $_SERVER['SCRIPT_NAME']; // Par exemple "/kingdom_of_cards/api/router.php"
+$base = $_SERVER['SCRIPT_NAME'];
 
 // Retire le chemin du script pour obtenir le endpoint
 $uri = str_replace($base, "", $uri);

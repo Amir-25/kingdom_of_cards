@@ -1,0 +1,311 @@
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&display=swap');
+
+* {
+    cursor: url('../assets/swordIcon.png') 0 0, auto;
+}
+
+.shop-page {
+    background-image: url('../assets/shop-background.webp'); 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    color: black;
+}
+
+/* Barre du haut */
+.shop-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(30, 30, 30, 0.85);
+    padding: 20px 40px;
+    width: 100%;
+    box-sizing: border-box;
+    border-bottom: 3px solid #00bfff;
+    border-top: 3px solid #00bfff;
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.6), inset 0 0 10px rgba(0, 191, 255, 0.3);
+}
+
+.shop-title {
+    font-family: 'Pirata One', cursive;
+    font-size: 36px;
+    color: #00bfff;
+    text-shadow: 2px 2px 6px rgba(0, 191, 255, 0.8);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.username {
+    font-family: 'Pirata One', cursive;
+    color: #00bfff;
+    font-size: 26px;
+    text-shadow: 2px 2px 5px rgba(0, 191, 255, 0.6);
+}
+
+.currency {
+    font-family: 'Pirata One', cursive;
+    background-color: #444;
+    color: #e0f7ff;
+    padding: 6px 40px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 22px;
+    border: 2px solid #222;
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+}
+
+/* Section Pack */
+.pack-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pack-wrapper {
+    position: relative;
+    background-color: rgba(30, 30, 30, 0.9);
+    border: 2px solid rgba(0, 0, 0, 0.333);
+    border-radius: 20px;
+    padding: 10px;
+    width: 400px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 35px auto 0 auto;
+    box-shadow: 0 0 25px 5px rgba(15, 15, 13, 0.8);
+}
+
+.pack-card {
+    width: 280px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 35px 15px rgba(0, 191, 255, 0.5);
+    animation: bluePulse 2.5s infinite;
+}
+
+.pack-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 50px 25px rgba(0, 191, 255, 0.95);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pack-price {
+    position: absolute;
+    top: -10px;
+    right: -70px;
+    width: 200px;
+    height: auto;
+    z-index: 10;
+    transform: rotate(-20deg);
+}
+
+.pack-price:hover{
+    transform: scale(1.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+/* Fenêtre de confirmation */
+.confirmation-box {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20, 20, 20, 0.95);
+    border: 2px solid #00bfff;
+    color: #00bfff;
+    padding: 25px;
+    font-family: 'Pirata One', cursive;
+    font-size: 34px;
+    border-radius: 12px;
+    z-index: 1000;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.4);
+}
+
+.confirmation-box button {
+    margin: 10px;
+    padding: 8px 20px;
+    font-family: 'Pirata One', cursive;
+    font-size: 25px;
+    background-color: #00bfff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #222;
+    font-weight: bold;
+}
+
+/* Révélation de carte */
+.reveal-box {
+    display: none;
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(10, 10, 10, 0.95);
+    padding: 20px;
+    border: 2px solid #00bfff;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 2000;
+    font-family: 'Pirata One', cursive;
+    color: #00bfff;
+    box-shadow: 0 0 25px 5px rgba(15, 15, 13, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 55px auto 0 auto;
+}
+
+.card-reveal {
+    width: 250px;
+    max-width: 90%;
+    height: auto;
+    border-radius: 12px;
+    margin-top: 40px;
+    animation: revealCard 0.8s ease-out;
+    transition: transform 0.3s ease;
+}
+
+.card-name {
+    font-family: 'Pirata One', cursive;
+    color: #00bfff;
+    font-size: 28px;
+    text-shadow: 2px 2px 5px black;
+    margin-bottom: -10px;
+}
+
+.card-rarity {
+    font-size: 20px;
+    font-family: 'MedievalSharp', cursive;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px black;
+}
+
+.rarity-label {
+    font-size: 35px;
+    font-family: 'Pirata One', cursive;
+    text-align: center;
+    margin-top: -4px;  
+    margin-bottom: 10px;
+    text-shadow: none;
+}
+
+/* Rareté */
+.rarity-commun { color: rgba(0, 255, 0, 0.6); }
+.rarity-rare { color: rgba(0, 128, 255, 0.6); }
+.rarity-tresrare { color: rgba(255, 136, 0, 0.959); }
+.rarity-epique { color: rgba(104, 12, 158, 0.87); }
+.rarity-legendaire { color: rgba(255, 215, 0, 1); }
+
+.card-reveal.rarity-commun {
+    box-shadow: 0 0 25px 10px rgba(0, 255, 0, 0.6);
+}
+.card-reveal.rarity-rare {
+    box-shadow: 0 0 25px 10px rgba(0, 128, 255, 0.6);
+}
+.card-reveal.rarity-tresrare {
+    box-shadow: 0 0 25px 10px rgba(255, 136, 0, 0.959);
+}
+.card-reveal.rarity-epique {
+    box-shadow: 0 0 25px 10px rgba(104, 12, 158, 0.87);
+}
+.card-reveal.rarity-legendaire {
+    box-shadow: 0 0 25px 8px rgba(255, 215, 0, 1);
+    animation: legendaryPulse 2.5s infinite, rotateLegendaire 2.5s ease-in-out;
+    z-index: 3;
+    position: relative;
+}
+
+
+/* Bouton retour */
+.retour {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    text-decoration: none;
+    color: #00bfff;
+    font-family: 'Pirata One', cursive;
+    font-weight: bold;
+    font-size: 40px;
+    padding: 10px 20px;
+    border: 2px solid #00bfff;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.retour:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    box-shadow: 0 0 25px rgba(0, 191, 255, 0.6);
+    transform: scale(1.05);
+}
+
+/* Animations */
+@keyframes legendaryPulse {
+    0% {
+        box-shadow:
+            0 0 10px rgba(255, 215, 0, 0.5),
+            0 0 20px rgba(255, 215, 0, 0.4),
+            0 0 30px rgba(255, 215, 0, 0.3);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow:
+            0 0 20px rgba(255, 215, 0, 0.9),
+            0 0 40px rgba(255, 215, 0, 0.6),
+            0 0 60px rgba(255, 215, 0, 0.5);
+        transform: scale(1.05);
+    }
+    100% {
+        box-shadow:
+            0 0 10px rgba(255, 215, 0, 0.5),
+            0 0 20px rgba(255, 215, 0, 0.4),
+            0 0 30px rgba(255, 215, 0, 0.3);
+        transform: scale(1);
+    }
+}
+
+@keyframes revealCard {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bluePulse {
+    0%   { box-shadow: 0 0 20px 5px rgba(0, 102, 255, 0.6); }
+    50%  { box-shadow: 0 0 30px 10px rgba(0, 102, 255, 0.9); }
+    100% { box-shadow: 0 0 20px 5px rgba(0, 102, 255, 0.6); }
+}
+
+@keyframes rotateLegendaire {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(1080deg);
+    }
+}
+
+
+

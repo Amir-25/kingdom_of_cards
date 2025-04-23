@@ -49,6 +49,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     rand -= c.chance;
                     if (rand <= 0) {
                         selected = c;
+                        console.log("Carte tirée :", selected.name, "ID:", selected.id, "Chance:", selected.chance);
+
                         break;
                     }
                 }
@@ -69,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (ids.includes(selected.id)) {
                         rarity = label;
                         rarityClass = "rarity-" + label.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, "");
-
                         break;
                     }
                 }

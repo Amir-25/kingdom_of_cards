@@ -11,12 +11,12 @@ if (!isset($_SESSION['username'])) {
 <head>
     <meta charset="UTF-8">
     <title>Shop - Kingdom of Cards</title>
-    <link rel="stylesheet" href="../Styles/styles.css">
+    <link rel="stylesheet" href="../Styles/shop.css">
 </head>
 <body class="shop-page">
     <!-- BARRE SHOP -->
     <div class="shop-bar">
-        <div class="shop-title">Kingdom of Cards SHOP</div>
+        <div class="shop-title">Magasin</div>
         <div class="user-info">
             <span class="username"><?php echo $_SESSION['username']; ?></span>
             <div class="currency"><?php
@@ -27,7 +27,7 @@ $stmt->execute([$username]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <span id="money"><?php echo $user['money']; ?></span>
- 💸</div>
+💰</div>
         </div>
     </div>
 
@@ -35,13 +35,13 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
     <div class="pack-section">
         <div class="pack-wrapper">
             <img src="../assets/pack_bg.png" class="pack-card" alt="Pack de cartes" onclick="confirmPurchase()">
+            <img class="pack-price" src="../assets/prix.png"></img>
         </div>
-        <p class="pack-price">6000 <span class="emoji">💸</span></p>
     </div>
 
     <!-- BOÎTE DE CONFIRMATION -->
     <div id="confirmation" class="confirmation-box" style="display: none;">
-        <p>Souhaitez-vous acheter ce pack pour <strong>6000</strong> 💸 ?</p>
+        <p>Souhaitez-vous acheter ce pack pour <strong>6000</strong> 💰 ?</p>
         <button type="button" onclick="confirmBuy()">Oui</button>
         <button type="button" onclick="cancelBuy()">Non</button>
     </div>
