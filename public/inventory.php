@@ -165,13 +165,13 @@ document.getElementById("remove-card").addEventListener("click", async () => {
         }
 
         // Mise à jour en base de données
-        await fetch("../api/save_card.php", {
+        /*await fetch("../api/save_card.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 carte_nom: altText
             })
-        });
+        });*/
     }
 });
 

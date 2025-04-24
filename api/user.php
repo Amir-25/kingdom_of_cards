@@ -167,6 +167,7 @@ function saveDeck() {
                 $cardId = $card["id"];
                 $stmt->execute([$user_id, $cardId, $position]);
 
+                /*//
                 if (!isset($seen[$cardId])) {
                     $seen[$cardId] = 0;
                 }
@@ -186,6 +187,7 @@ function saveDeck() {
                             ->execute([$user_id, $cardId]);
                     }
                 }
+                //*/
             }
         }
 
