@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     const host = window.location.hostname; 
 
-    socket = new WebSocket('ws://192.168.0.181:8080'); //Remplace 192.168.1.42 par l’IP réelle que tu as 
+    socket = new WebSocket('ws://10.192.164.250:9000'); //Remplace 192.168.1.42 par l’IP réelle que tu as 
 
 
     socket.onopen = function () {
