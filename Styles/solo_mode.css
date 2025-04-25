@@ -1,0 +1,354 @@
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&display=swap');
+
+* {
+    cursor: url('../assets/swordIcon.png') 0 0, auto !important;
+}
+
+body {
+    background: url('../assets/intro-bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Pirata One', cursive;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.audio-container {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border: 2px solid #00bfff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #00bfff;
+    display: flex;
+    align-items: center;
+}
+
+.audio-container label {
+    color: #00bfff;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+#audio-player {
+    display: none;
+}
+
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100px;
+    height: 5px;
+    background: #00bfff;
+    border-radius: 5px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.volume-slider:hover {
+    box-shadow: 0 0 10px #00bfff;
+}
+
+@keyframes fadeIn {
+    from {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+to {
+    opacity: 1;
+    transform: scale(1);
+}
+
+
+}
+
+
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: url('../assets/arene.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+    font-family: 'Press Start 2P', cursive;
+    color: #fff;
+}
+
+.slots {
+    display:flex;
+    justify-content:center;
+    gap:10px;
+}
+
+.card-slot {
+    width:80px;
+    height:120px;
+    border:2px dashed rgba(255, 255, 255, 0.3);
+    border-radius:8px;
+    background:rgba(0,0,0,0.6);
+    background-size:cover;
+    background-position:center;
+}
+
+
+.action-buttons {
+    position: fixed; 
+    top: 50%; 
+    right: 30px; 
+    transform: translateY(-50%); 
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1000;
+}
+
+
+.action-buttons button {
+    background: linear-gradient(145deg, #121212, #1c1c1c);
+    border: 2px solid #00ffcc;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+    color: #00ffcc;
+    text-shadow: 0 0 3px #00ffcc;
+    box-shadow: 0 0 8px #00ffcc66;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.action-buttons button:hover {
+    background: #00ffcc;
+    color: #000;
+    text-shadow: none;
+    box-shadow: 0 0 15px #00ffccaa;
+    transform: scale(1.05);
+}
+
+.action-buttons button:disabled {
+    background: #333;
+    border-color: #555;
+    color: #777;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.timer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.8);
+    padding: 15px 25px;
+    border-radius: 10px;
+    border: 3px solid #fff;
+    font-size: 18px;
+    text-align: center;
+    z-index: 9999;
+}
+
+.pv {
+    position:absolute;
+    background:rgba(0,0,0,0.8);
+    border:2px solid #00bfff;
+    padding:8px 15px;
+    border-radius:8px;
+    color:#00bfff;
+    text-shadow:0 0 5px #00bfff;
+    font-size:16px;
+}
+
+#user-pv {
+    bottom:300px;
+    left:10px;
+}
+
+#opponent-pv {
+    top:80px;
+    left:10px;
+}
+
+.card-info {
+    font-family:'Press Start 2P', cursive;
+    animation:fade-in 0.2s;
+}
+
+@keyframes fade-in {
+    from {
+    opacity:0;
+    transform:translateY(-10px);
+}
+
+to {
+    opacity:1;
+    transform:translateY(0);
+}
+
+
+}
+
+.selected {
+    border: 3px solid #00ffff !important;
+    box-shadow: 0 0 10px #00ffff;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+#custom-alert {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+}
+
+.alert-box {
+    background: #111;
+    border: 3px solid #00bfff;
+    padding: 25px 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    font-family: 'Pirata One', cursive;
+    font-size: 27px;
+    box-shadow: 0 0 20px #00bfff;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.alert-box button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #00bfff;
+    color: black;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Pirata One', cursive;
+    font-size: 20px;
+}
+
+
+.timer-bar-container {
+    position: absolute;
+    top: 53%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 380px;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 9999;
+    box-shadow: 0 0 10px #00ffcc;
+}
+
+.timer-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #00ffcc, #0099cc);
+    transition: width 1s linear;
+}
+
+
+
+/* Animation de clignotement */
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7), 0 0 30px 15px rgba(255, 0, 0, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.3), 0 0 50px 30px rgba(255, 100, 100, 0.7);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7), 0 0 30px 15px rgba(255, 0, 0, 0.4);
+    }
+}
+
+/* Application de l'animation de clignotement */
+.flash-bar {
+    animation: pulse-glow 1s infinite;
+}
+
+.flash-text, .flash-bar {
+    animation: pulse-glow 1s infinite;
+}
+
+
+
+
+@keyframes dissolveEffect {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0px);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.1);
+        filter: blur(3px);
+        rotate: 30deg;
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0);
+        filter: blur(5px);
+    }
+}
+
+.card-destroyed {
+    animation: dissolveEffect 3s forwards, fadeInSlot 0.5s forwards;
+}
+
+
+  
+
+@keyframes attackEffect {
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    30% {
+        transform: translateY(-20px) scale(1.1);
+    }
+    60% {
+        transform: translateY(-5px) scale(1.05);
+    }
+    100% {
+        transform: translateY(0) scale(1);
+    }
+}
+
+.card-attack {
+    animation: attackEffect 0.6s ease-in-out;
+    z-index: 100; /* met la carte par-dessus */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
