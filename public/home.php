@@ -129,7 +129,7 @@ document.getElementById('playOnline').addEventListener('click', function () {
                     statusDiv.textContent = 'Match trouvé ! Redirection en cours...';
                 }
                 // Rediriger vers battle.php en passant l'identifiant de match dans l'URL
-                window.location.href = 'battle.php?match=' + encodeURIComponent(matchId);
+                window.location.href = 'online_mode.php?match=' + encodeURIComponent(matchId);
             }
         } catch (e) {
             console.error('Erreur de traitement du message WebSocket:', e);
