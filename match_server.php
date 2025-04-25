@@ -77,7 +77,7 @@ class Matchmaker implements MessageComponentInterface {
     }
 }
 
-$port = 8080;
+$port = 9000;
 $server = IoServer::factory(
     new HttpServer(new WsServer(new Matchmaker())),
     $port

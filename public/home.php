@@ -91,7 +91,7 @@ document.getElementById('playOnline').addEventListener('click', function () {
 
     const host = window.location.hostname; 
 
-    const socket = new WebSocket('ws://192.168.0.181:8080'); //Remplace 192.168.1.42 par l’IP réelle que tu as 
+    const socket = new WebSocket('ws://172.20.10.2:9000'); //Remplace 192.168.1.42 par l’IP réelle que tu as 
 
     const statusDiv = document.getElementById('statusMsg');
     if (statusDiv) {
