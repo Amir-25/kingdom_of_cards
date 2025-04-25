@@ -208,12 +208,10 @@ document.getElementById("remove-card").addEventListener("click", async () => {
         const imgSrc = card.querySelector("img").getAttribute("src");
         const altText = card.querySelector("img").getAttribute("alt");
 
-        // Vider le slot côté visuel
         selectedSlot.innerHTML = "";
         selectedSlot.classList.remove("selected-slot");
         document.getElementById("remove-card").disabled = true;
 
-        // Ajouter côté interface
         const existing = [...document.querySelectorAll(".card")].find(c => c.querySelector("img").alt === altText);
         if (existing) {
             let qte = parseInt(existing.dataset.quantity);
@@ -227,15 +225,6 @@ document.getElementById("remove-card").addEventListener("click", async () => {
         }
 
         deckModifie = true;
-
-        // Mise à jour en base de données
-        /*await fetch("../api/save_card.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                carte_nom: altText
-            })
-        });*/
     }
 });
 
@@ -293,7 +282,6 @@ fetch("../api/router.php/load_deck", {
         });
     }
 });
-    //let deckModifie = false; // À toi de l’activer quand une carte change
 
     document.getElementById("back-button").addEventListener("click", function (e) {
         if (deckModifie) {

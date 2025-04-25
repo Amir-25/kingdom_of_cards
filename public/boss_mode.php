@@ -15,7 +15,7 @@ $stmt = $pdo->prepare("
 $stmt->execute([$user_id]);
 $user_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-/// Deck du Boss (Pierre Belisle uniquement)
+// Deck du Boss
 $stmt = $pdo->prepare("
 SELECT id, nom, image_path, attaque, defense, rarete, effet, fusionnable 
 FROM cartes WHERE id = ?
@@ -197,7 +197,6 @@ function addDrop(arena, deck, role, deckData){
 
 
 addDrag(document.querySelectorAll("#user-slots .card-slot"),'user');
-// Appel exact (à remplacer par le nouveau appel clair avec le deckData) :
 addDrop(document.querySelectorAll("#user-arena .card-slot"), document.querySelectorAll("#user-slots .card-slot"), 'user', userDeck);
 
 document.getElementById('end-turn').onclick=changeTurn;
@@ -262,33 +261,7 @@ addRightClick(document.querySelectorAll("#user-arena .card-slot"), userDeck, fal
 addRightClick(document.querySelectorAll("#opponent-slots .card-slot"), opponentDeck, true);
 addRightClick(document.querySelectorAll("#opponent-arena .card-slot"), opponentDeck, true);
 
-// Gestion sélection cartes dans l'arène
 
-/* function toggleSelect(slot, idCarte) {
-    if (slot.classList.contains('selected')) {
-        slot.classList.remove('selected');
-        selectedCards = selectedCards.filter(id => id !== idCarte);
-    } else {
-        if (selectedCards.length < 2) {
-            slot.classList.add('selected');
-            selectedCards.push(idCarte);
-        } else {
-            alert('Tu ne peux sélectionner que 2 cartes pour fusionner.');
-        }
-    }
-}
-
-// Applique sélection aux cartes d'arène du joueur
-document.querySelectorAll("#user-arena .card-slot").forEach(slot => {
-    slot.onclick = () => {
-        const bgImage = slot.style.backgroundImage;
-        if (!bgImage) return;
-
-        const filename = bgImage.split('/').pop().replace(/["')]/g, '');
-        const card = userDeck.find(c => c.image_path.includes(filename));
-        if (card) toggleSelect(slot, card.id);
-    };
-}); */
 
 
 // Sélection cartes adverses

@@ -42,7 +42,6 @@ try {
         exit;
     }
 
-    // Déduction
     $new_balance = $money - $pack_price;
     $stmt = $pdo->prepare("UPDATE users SET money = ? WHERE id = ?");
     $stmt->execute([$new_balance, $user_id]);

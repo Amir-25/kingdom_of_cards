@@ -167,27 +167,6 @@ function saveDeck() {
                 $cardId = $card["id"];
                 $stmt->execute([$user_id, $cardId, $position]);
 
-                /*//
-                if (!isset($seen[$cardId])) {
-                    $seen[$cardId] = 0;
-                }
-
-                if ($seen[$cardId] < $cardCounts[$filename]) {
-                    $seen[$cardId]++;
-
-                    $check = $pdo->prepare("SELECT quantite FROM joueur_cartes WHERE id_joueur = ? AND id_carte = ?");
-                    $check->execute([$user_id, $cardId]);
-                    $owned = $check->fetchColumn();
-
-                    if ($owned > $seen[$cardId]) {
-                        $pdo->prepare("UPDATE joueur_cartes SET quantite = quantite - 1 WHERE id_joueur = ? AND id_carte = ?")
-                            ->execute([$user_id, $cardId]);
-                    } else {
-                        $pdo->prepare("DELETE FROM joueur_cartes WHERE id_joueur = ? AND id_carte = ?")
-                            ->execute([$user_id, $cardId]);
-                    }
-                }
-                //*/
             }
         }
 

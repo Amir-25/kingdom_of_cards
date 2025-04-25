@@ -88,28 +88,22 @@ if (!isset($_SESSION["user_id"])) {
 
 <script>
 document.getElementById('playOnline').addEventListener('click', function () {
-    // 2.a Établir la connexion WebSocket vers le serveur Ratchet
-    // Construire l'URL WebSocket : on utilise le même host que la page, avec le port du serveur WS
+
     const host = window.location.hostname; 
-    
-    //const socket = new WebSocket('ws://' + host + ':8080');  // utilisez 'wss://' si SSL/TLS
 
     const socket = new WebSocket('ws://192.168.0.181:8080'); //Remplace 192.168.1.42 par l’IP réelle que tu as 
 
-    // (Optionnel) Indiquer à l'utilisateur que la recherche de match a commencé
     const statusDiv = document.getElementById('statusMsg');
     if (statusDiv) {
         statusDiv.textContent = 'Connexion au serveur de jeu...';
     }
 
-    // 2.b Gérer l'ouverture de la connexion
+    
     socket.onopen = function () {
         console.log('Connecté au serveur de matchmaking.');
         if (statusDiv) {
             statusDiv.textContent = 'En attente d’un autre joueur...';
         }
-        // A l'ouverture, notre serveur nous place automatiquement en file d'attente.
-        // (Pas besoin d'envoyer un message "join", sauf si on souhaitait transmettre des infos supplémentaires.)
     };
 
     // Gérer la réception des messages du serveur WebSocket
@@ -123,7 +117,6 @@ document.getElementById('playOnline').addEventListener('click', function () {
                     statusDiv.textContent = data.message || '';
                 }
             } else if (data.action === 'matchFound') {
-                // 2.c Match trouvé : rediriger vers la page de combat avec l'ID de match
                 const matchId = data.matchId;
                 if (statusDiv) {
                     statusDiv.textContent = 'Match trouvé ! Redirection en cours...';
@@ -148,7 +141,6 @@ document.getElementById('playOnline').addEventListener('click', function () {
     // Gérer les erreurs de la connexion WebSocket
     socket.onerror = function (error) {
         console.error('WebSocket error:', error);
-        // On peut afficher un message d'erreur à l'utilisateur
     };
 });
 </script>

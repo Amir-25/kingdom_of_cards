@@ -20,8 +20,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Auto-scroll pendant le drag
 document.addEventListener("dragover", function (e) {
-    const scrollMargin = 100;  // distance à partir du haut/bas pour déclencher le scroll
-    const scrollSpeed = 10;    // vitesse du scroll
+    const scrollMargin = 100; 
+    const scrollSpeed = 10;    
 
     const y = e.clientY;
 

@@ -21,12 +21,6 @@ $stmt = $pdo->prepare("
 $stmt->execute([$user_id]);
 $user_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// // Deck adverse (10 premières cartes)
-// $stmt = $pdo->query("
-//     SELECT id, nom, image_path, attaque, defense, rarete, effet, fusionnable 
-//     FROM cartes ORDER BY id LIMIT 10
-// ");
-// $opponent_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -40,7 +34,7 @@ $user_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding: 0;
             overflow: hidden;
             background: url('../assets/arene.jpg') no-repeat center center fixed;
-            background-size: cover; /* très important pour couvrir toute la page */
+            background-size: cover; 
             height: 100vh;
             width: 100vw;
             font-family: 'Press Start 2P', cursive;
@@ -182,7 +176,6 @@ const userDeck=<?= json_encode($user_deck); ?>;
 
 const opponentDeck= {}
 
-// let joueurActuel=Math.random()<0.5?'user':'opponent';
 
 let joueurActuel='opponent';
 
@@ -221,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     const host = window.location.hostname; 
 
-    socket = new WebSocket('ws://192.168.0.181:8080'); //Remplace 192.168.1.42 par l’IP réelle que tu as 
+    socket = new WebSocket('ws://192.168.0.181:8080');  
 
 
     socket.onopen = function () {
@@ -244,8 +237,6 @@ socket.onmessage = function (event) {
             arenaCards[key] = value;
 
             console.log(value);
-            // let oppoCards = data[Object.keys(data).find(key => key !== connId)];
-            // console.log(oppoCards);
             afficher(value,document.querySelectorAll("#opponent-arena .card-slot"));
 
             addRightClick(document.querySelectorAll("#opponent-arena .card-slot"), value, true);
@@ -268,7 +259,7 @@ socket.onmessage = function (event) {
     }
 };
 
-// Gérer la fermeture de la connexion (par le serveur ou en cas d’erreur)
+// Gérer la fermeture de la connexion par le serveur ou en cas d’erreur
 socket.onclose = function () {
     console.log('Connexion au serveur de matchmaking fermée.');
     // Si la fermeture survient avant qu'un match ne soit trouvé, on peut informer l'utilisateur
@@ -280,7 +271,6 @@ socket.onclose = function () {
 // Gérer les erreurs de la connexion WebSocket
 socket.onerror = function (error) {
     console.error('WebSocket error:', error);
-    // On peut afficher un message d'erreur à l'utilisateur
 };
 
 });
