@@ -235,7 +235,6 @@ function showCardInfo(cardData, slot, isOpponent = false){
         ATK : ${cardData.attaque}<br>
         DEF : ${cardData.defense}<br>
         Rareté : ${cardData.rarete}<br>
-        Effet : ${cardData.effet || 'Aucun'}<br>
         Fusionnable : ${cardData.fusionnable==1?'Oui':'Non'}
     `;
     slot.style.position = 'relative';
