@@ -12,7 +12,56 @@ if (!isset($_SESSION['username'])) {
     <meta charset="UTF-8">
     <title>Inventaire - Kingdom of Cards</title>
     <link rel="stylesheet" href="../Styles/inventory.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+    
+    <style>
+    #popup-confirm {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 99999;
+    }
+    .popup-box {
+        background: #111;
+        border: 3px solid #00bfff;
+        padding: 25px 40px;
+        border-radius: 15px;
+        text-align: center;
+        color: white;
+        font-family: 'Pirata One', cursive;
+        font-size: 24px;
+        box-shadow: 0 0 20px #00bfff;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    .popup-buttons {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+    }
+    .popup-buttons button {
+        padding: 10px 20px;
+        background: #00bfff;
+        color: black;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Pirata One', cursive;
+        font-size: 20px;
+    }
 
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+        .popup-hidden {
+        display: none !important;
+    }
+    </style>
 
 
 </head>
@@ -37,7 +86,7 @@ if (!isset($_SESSION['username'])) {
             <button id="save-deck">Sauvegarder mon deck</button>
         </div>
         <div class="back-button-container">
-            <button onclick="window.location.href='home.php'" class="back-button">Retour à l'accueil</button>
+            <button id="back-button" class="back-button">Retour à l'accueil</button>
         </div>
     </div>
 </div>
@@ -57,10 +106,23 @@ if (!isset($_SESSION['username'])) {
         <input type="range" id="volume" class="volume-slider" min="0" max="1" step="0.1" value="0.5">
     </div>
 
+    <div id="popup-confirm" class="popup-hidden">
+    <div class="popup-box">
+        <p>⚠️ Vous n'avez pas sauvegardé votre deck. Voulez-vous vraiment quitter ?</p>
+        <div class="popup-buttons">
+            <button id="popup-cancel">Annuler</button>
+            <button id="popup-confirm-leave">Quitter</button>
+        </div>
+    </div>
+</div>
+
+
     <script src="audio.js"></script>
     <script src="inventory.js"></script>
     <script>
 document.addEventListener("DOMContentLoaded", function () {
+    let deckModifie = false; 
+
     const cards = document.querySelectorAll(".card"); 
     const slots = document.querySelectorAll(".slot"); 
 
@@ -88,26 +150,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
    
         slot.addEventListener("drop", function (e) {
-            e.preventDefault();
-            slot.classList.remove("highlight"); 
+        e.preventDefault();
+        slot.classList.remove("highlight"); 
 
-            if (slot.innerHTML.trim()==="") {
-                const cardHTML = e.dataTransfer.getData("text/plain"); 
-                const parser = new DOMParser();
-                const cardElement = parser.parseFromString(cardHTML, "text/html").body.firstChild;
+        if (slot.innerHTML.trim() === "") {
+            const cardHTML = e.dataTransfer.getData("text/plain"); 
+            const parser = new DOMParser();
+            const cardElement = parser.parseFromString(cardHTML, "text/html").body.firstChild;
 
-                cardElement.style.width = "120px";
-                cardElement.style.height = "180px";
-                cardElement.style.cursor = "default";
+            cardElement.style.width = "120px";
+            cardElement.style.height = "180px";
+            cardElement.style.cursor = "default";
 
-              
-                slot.innerHTML = "";
-                slot.appendChild(cardElement);
+            slot.innerHTML = "";
+            slot.appendChild(cardElement);
 
-               
-                document.querySelector(".card-list").querySelector(`[src="${cardElement.querySelector("img").src}"]`).parentElement.remove();
-            }
-        });
+            document.querySelector(".card-list").querySelector(`[src="${cardElement.querySelector("img").src}"]`).parentElement.remove();
+
+            deckModifie = true;
+        }
+    });
     });
 
     function autoScroll(e) {
@@ -164,6 +226,8 @@ document.getElementById("remove-card").addEventListener("click", async () => {
             setupDragAndDrop();
         }
 
+        deckModifie = true;
+
         // Mise à jour en base de données
         /*await fetch("../api/save_card.php", {
             method: "POST",
@@ -199,6 +263,8 @@ document.getElementById("save-deck").addEventListener("click", async () => {
 
     const result = await response.json();
     alert(result.success || result.error);
+
+    deckModifie = false;
 });
 
 // charger le deck automatiquement
@@ -227,7 +293,24 @@ fetch("../api/router.php/load_deck", {
         });
     }
 });
+    //let deckModifie = false; // À toi de l’activer quand une carte change
 
+    document.getElementById("back-button").addEventListener("click", function (e) {
+        if (deckModifie) {
+            e.preventDefault();
+            document.getElementById("popup-confirm").classList.remove("popup-hidden");
+        } else {
+            window.location.href = "home.php";
+        }
+    });
+
+    document.getElementById("popup-cancel").addEventListener("click", function () {
+        document.getElementById("popup-confirm").classList.add("popup-hidden");
+    });
+
+    document.getElementById("popup-confirm-leave").addEventListener("click", function () {
+        window.location.href = "home.php";
+    });
 });
 </script>
 </body>
