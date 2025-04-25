@@ -3,7 +3,7 @@
         'name' => 'najib/kingdom_of_cards',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '8ceaef1e400afdbe5520f91403eef0fb780dddbf',
+        'reference' => '16d934747e0452e296956a2b31110c76a06aa0e6',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'najib/kingdom_of_cards' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '8ceaef1e400afdbe5520f91403eef0fb780dddbf',
+            'reference' => '16d934747e0452e296956a2b31110c76a06aa0e6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
