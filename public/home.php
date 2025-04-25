@@ -94,7 +94,7 @@ document.getElementById('playOnline').addEventListener('click', function () {
     
     //const socket = new WebSocket('ws://' + host + ':8080');  // utilisez 'wss://' si SSL/TLS
 
-    const socket = new WebSocket('ws://10.192.164.250:9000'); //Remplace 192.168.1.42 par l’IP réelle que tu as 
+    const socket = new WebSocket('ws://172.20.10.2:9000'); //Remplace 192.168.1.42 par l’IP réelle que tu as 
 
     // (Optionnel) Indiquer à l'utilisateur que la recherche de match a commencé
     const statusDiv = document.getElementById('statusMsg');
