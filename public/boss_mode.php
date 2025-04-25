@@ -28,106 +28,22 @@ $opponent_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Arena - Kingdom of Cards</title>
+    <link rel="stylesheet" href="../Styles/boss_mode.css">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background: url('../assets/arene2.jpg') no-repeat center center fixed;
-            background-size: cover; /* très important pour couvrir toute la page */
-            height: 100vh;
-            width: 100vw;
-            font-family: 'Press Start 2P', cursive;
-            color: #fff;
-        }
-
-        .slots{display:flex;justify-content:center;gap:10px;}
-        .card-slot {
-            width:80px;height:120px;border:2px solid #fff;border-radius:8px;
-            background:rgba(0,0,0,0.6);background-size:cover;background-position:center;
-        }
-        .action-buttons {
-            position:absolute;top:50%;right:20px;display:flex;flex-direction:column;gap:10px;
-        }
-.action-buttons button {
-    background: linear-gradient(145deg, #121212, #1c1c1c);
-    border: 2px solid #00ffcc;
-    border-radius: 10px;
-    padding: 12px 18px;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 10px;
-    color: #00ffcc;
-    text-shadow: 0 0 3px #00ffcc;
-    box-shadow: 0 0 8px #00ffcc66;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-.action-buttons button:hover {
-    background: #00ffcc;
-    color: #000;
-    text-shadow: none;
-    box-shadow: 0 0 15px #00ffccaa;
-    transform: scale(1.05);
-}
-
-.action-buttons button:disabled {
-    background: #333;
-    border-color: #555;
-    color: #777;
-    box-shadow: none;
-    cursor: not-allowed;
-}
-
-        .timer {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.8);
-            padding: 15px 25px;
-            border-radius: 10px;
-            border: 3px solid #fff;
-            font-size: 18px;
-            text-align: center;
-            z-index: 9999;
-        }
-
-        .pv {
-            position:absolute;background:rgba(0,0,0,0.8);border:2px solid #00ff22;
-            padding:8px 15px;border-radius:8px;color:#00ff22;text-shadow:0 0 5px #00ff22;font-size:16px;
-        }
-        #user-pv{bottom:300px;left:10px;}
-        #opponent-pv{top:80px;left:10px;}
-        
-        .card-info{
-            font-family:'Press Start 2P', cursive;
-            animation:fade-in 0.2s;
-        }
-
-        @keyframes fade-in{
-            from{opacity:0;transform:translateY(-10px);}
-            to{opacity:1;transform:translateY(0);}
-        }
-
-        .selected {
-            border: 3px solid #00ffff !important;
-            box-shadow: 0 0 10px #00ffff;
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-
-
-    </style>
 </head>
 <body>
 
+<div id="custom-alert" style="display:none;">
+    <div class="alert-box">
+        <p id="alert-message"></p>
+        <button onclick="closeAlert()">OK</button>
+    </div>
+</div>
+
 <div class="timer">Temps restant : <span id="timer">60</span>s</div>
+<div class="timer-bar-container">
+  <div class="timer-bar" id="timer-bar"></div>
+</div>
 
 <div class="pv" id="opponent-pv">Adversaire : <span id="opponent-life">10000</span> PV</div>
 <div class="pv" id="user-pv">Toi : <span id="user-life">15000</span> PV</div>
@@ -183,7 +99,7 @@ $opponent_deck = $stmt->fetchAll(PDO::FETCH_ASSOC);
 const userDeck=<?= json_encode($user_deck); ?>;
 const opponentDeck=<?= json_encode($opponent_deck); ?>;
 let joueurActuel = 'user';
-alert("Tu commences le match contre Pierre Belisle !");
+showAlert("Tu commences le match contre Pierre !");
 let tourBoss = 0; 
 
 let userPV = 15000, opponentPV = <?= $opponent_deck[0]['defense'] ?>;
@@ -208,8 +124,28 @@ let enAttaque = false;
 let enAttaqueOpponent = false;
 
 function updateTimer(){
-    if(timeLeft>0){timeLeft--;timerElement.textContent=timeLeft;}
-    else{changeTurn();}
+    if (timeLeft > 0) {
+        timeLeft--;
+        timerElement.textContent = timeLeft;
+
+        const percent = (timeLeft / 60) * 100; 
+        document.getElementById('timer-bar').style.width = percent + "%";
+
+     
+        if (timeLeft <= 10) {
+            document.getElementById('timer-bar').style.background = 'linear-gradient(90deg,rgb(248, 26, 26), #cc0000)';
+            document.getElementById('timer-bar').classList.add('flash-bar'); 
+            document.getElementById('timer').classList.add('flash-text'); 
+        } else {
+            document.getElementById('timer-bar').style.background = 'linear-gradient(90deg, #00ffcc, #0099cc)';
+            document.getElementById('timer-bar').classList.remove('flash-bar'); 
+            document.getElementById('timer').classList.remove('flash-text'); 
+        }
+
+    } else {
+        changeTurn();
+    }
+    updateLifeBars();
 }
 
 function afficher(deck,slots){
@@ -269,7 +205,7 @@ document.getElementById('end-turn').onclick=changeTurn;
 document.getElementById('give-up').onclick=()=>{
     clearInterval(timerInterval);
     let winner=joueurActuel==='user'?'Ton adversaire':'Toi';
-    alert(winner+" a gagné par abandon !");
+    showAlert(winner+" a gagné par abandon !");
     setTimeout(()=>{window.location.href="home.php";},1000);
 };
 
@@ -369,20 +305,20 @@ document.querySelectorAll("#opponent-arena .card-slot").forEach(slot => {
         if (enAttaque && joueurActuel === 'user') {
     enAttaque = false;
 
-    alert(`Tu attaques Pierre Belisle avec "${cardToAttackWith.nom}" !`);
+    showAlert(`Tu attaques Pierre avec "${cardToAttackWith.nom}" !`);
 
     opponentPV -= cardToAttackWith.attaque;
     document.getElementById('opponent-life').textContent = Math.max(opponentPV, 0);
 
     if (cardToAttackWith.attaque < opponentDeck[0].defense) {
-        alert(`Ta carte "${cardToAttackWith.nom}" a été détruite en attaquant Pierre Belisle.`);
+        showAlert(`Ta carte "${cardToAttackWith.nom}" a été détruite en attaquant Pierre.`);
         document.querySelectorAll("#user-arena .card-slot").forEach(s => {
             if (s.style.backgroundImage.includes(cardToAttackWith.image_path.split('/').pop())) {
                 s.style.backgroundImage = '';
             }
         });
     } else {
-        alert(`Ta carte "${cardToAttackWith.nom}" survit à l'attaque.`);
+        showAlert(`Ta carte "${cardToAttackWith.nom}" survit à l'attaque.`);
     }
 
     cardToAttackWith = null;
@@ -390,7 +326,7 @@ document.querySelectorAll("#opponent-arena .card-slot").forEach(slot => {
     document.querySelectorAll(".card-slot.selected").forEach(s => s.classList.remove('selected'));
 
     if (opponentPV <= 0) {
-    alert("Bravo ! Tu as vaincu Pierre Belisle !");
+        showAlert("Bravo ! Tu as vaincu Pierre!");
     
     // Appel AJAX vers un fichier PHP pour ajouter l'argent
     fetch('../api/reward_boss_win.php', {
@@ -401,7 +337,7 @@ document.querySelectorAll("#opponent-arena .card-slot").forEach(slot => {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            alert("Tu as gagné 300000 💰 !");
+            showAlert("Tu as gagné 300000 💰 !");
         } else {
             console.warn("Erreur de reward :", data.error);
         }
@@ -427,7 +363,7 @@ document.querySelectorAll("#opponent-arena .card-slot").forEach(slot => {
                     slot.classList.add('selected');
                     opponentSelectedCards.push(card.id);
                 } else {
-                    alert('Tu ne peux sélectionner que 2 cartes pour fusionner.');
+                    showAlert('Tu ne peux sélectionner que 2 cartes pour fusionner.');
                 }
             }
         } else { // Attaque adversaire
@@ -454,7 +390,7 @@ document.getElementById('fusion-btn').onclick = () => {
     let deckActuel = joueurActuel === 'user' ? userDeck : opponentDeck;
 
     if (cartes.length !== 2) {
-        alert('Sélectionne exactement 2 cartes pour fusionner.');
+        showAlert('Sélectionne exactement 2 cartes pour fusionner.');
         return;
     }
 
@@ -466,7 +402,7 @@ document.getElementById('fusion-btn').onclick = () => {
     .then(response => response.json())
     .then(result => {
         if (result.fusion) {
-            alert("Fusion réussie ! " + result.carte.nom + " apparait !");
+            showAlert("Fusion réussie ! " + result.carte.nom + " apparait !");
 
             // Retirer cartes fusionnées et enlever sélection
             document.querySelectorAll(arenaId + " .card-slot.selected").forEach(slot => {
@@ -495,7 +431,7 @@ document.getElementById('fusion-btn').onclick = () => {
                 emptySlot.dataset.index = deckActuel.length;
                 deckActuel.push(result.carte);
             } else {
-                alert('Aucun emplacement libre dans l\'arène.');
+                showAlert('Aucun emplacement libre dans l\'arène.');
             }
 
             canAttackThisTurn = false;
@@ -512,7 +448,7 @@ let effetBossActif = false;
 
 function changeTurn(){
     joueurActuel = joueurActuel === 'user' ? 'opponent' : 'user';
-    alert("Tour de : " + (joueurActuel === 'user' ? 'Toi' : 'Pierre Belisle'));
+    showAlert("Tour de : " + (joueurActuel === 'user' ? 'Toi' : 'Pierre Belisle'));
     timeLeft = 60;
     timerElement.textContent = timeLeft;
 
@@ -525,7 +461,7 @@ function changeTurn(){
         tourBoss++;
 
         if (tourBoss === 1) {
-            alert("Pierre Belisle t'observe et n'attaque pas ce tour !");
+            showAlert("Pierre t'observe et n'attaque pas ce tour !");
             setTimeout(changeTurn, 2000);
             return;
         }
@@ -533,7 +469,7 @@ function changeTurn(){
         // Effet spécial (3ᵉ tour du boss)
         if (tourBoss === 3) {
             document.getElementById('effet-audio').play().catch(e => console.warn("Audio effet non lancé :", e));
-            alert("Pierre Belisle active son effet : ATK de tes cartes à 0 pendant 60 s durant ton prochain tour !");
+            showAlert("Pierre Belisle active son effet : ATK de tes cartes à 0 pendant 60 s durant ton prochain tour !");
             effetBossActif = true;
         }
 
@@ -545,7 +481,7 @@ function changeTurn(){
         setTimeout(() => {
             userDeck.forEach(carte => carte.attaque = carte.attaqueOriginale);
             effetBossActif = false;
-            alert("L'effet de Pierre Belisle est terminé. Tes cartes récupèrent leur ATK.");
+            showAlert("L'effet de Pierre est terminé. Tes cartes récupèrent leur ATK.");
         }, 60000); // Durée exacte d'un tour joueur (60 sec)
     }
 }
@@ -568,22 +504,22 @@ function bossAttaque() {
         const carte = userDeck[idx];
 
         if(opponentDeck[0].attaque > carte.defense){
-            alert(`Pierre Belisle a détruit ta carte "${carte.nom}" !`);
+            showAlert(`Pierre a détruit ta carte "${carte.nom}" !`);
             cartePlusFaible.style.backgroundImage = '';
             userPV -= opponentDeck[0].attaque - carte.defense;
         } else {
-            alert(`Ta carte "${carte.nom}" résiste à l'attaque !`);
+            showAlert(`Ta carte "${carte.nom}" résiste à l'attaque !`);
         }
 
     } else {
         userPV -= opponentDeck[0].attaque;
-        alert(`Pierre Belisle attaque directement tes PV (${opponentDeck[0].attaque} dégâts) !`);
+        showAlert(`Pierre attaque directement tes PV (${opponentDeck[0].attaque} dégâts) !`);
     }
 
     document.getElementById('user-life').textContent = Math.max(userPV, 0);
 
     if (userPV <= 0) {
-        alert("Pierre Belisle t'a vaincu !");
+        showAlert("Pierre t'a vaincu !");
         setTimeout(() => { window.location.href = "home.php"; }, 1000);
     } else {
         setTimeout(changeTurn, 2000);
@@ -605,13 +541,13 @@ document.querySelectorAll("#user-arena .card-slot").forEach(slot => {
             enAttaqueOpponent = false;
 
             if (opponentCardToAttackWith.attaque > card.defense) {
-                alert(`Ta carte "${card.nom}" a été détruite par l'adversaire !`);
+                showAlert(`Ta carte "${card.nom}" a été détruite par l'adversaire !`);
                 slot.style.backgroundImage = '';
                 userPV -= (opponentCardToAttackWith.attaque - card.defense);
                 document.getElementById('user-life').textContent = userPV;
 
             } else if (opponentCardToAttackWith.attaque < card.defense) {
-                alert(`La carte adverse "${opponentCardToAttackWith.nom}" a été détruite en t'attaquant !`);
+                showAlert(`La carte adverse "${opponentCardToAttackWith.nom}" a été détruite en t'attaquant !`);
                 document.querySelectorAll("#opponent-arena .card-slot").forEach(s => {
                     if (s.style.backgroundImage.includes(opponentCardToAttackWith.image_path.split('/').pop())) {
                         s.style.backgroundImage = '';
@@ -619,7 +555,7 @@ document.querySelectorAll("#user-arena .card-slot").forEach(slot => {
                 });
 
             } else { // Égalité
-                alert(`Les deux cartes "${card.nom}" et "${opponentCardToAttackWith.nom}" ont été détruites !`);
+                showAlert(`Les deux cartes "${card.nom}" et "${opponentCardToAttackWith.nom}" ont été détruites !`);
                 slot.style.backgroundImage = '';
                 document.querySelectorAll("#opponent-arena .card-slot").forEach(s => {
                     if (s.style.backgroundImage.includes(opponentCardToAttackWith.image_path.split('/').pop())) {
@@ -634,7 +570,7 @@ document.querySelectorAll("#user-arena .card-slot").forEach(slot => {
             document.querySelectorAll(".card-slot.selected").forEach(s => s.classList.remove('selected'));
 
             if (userPV <= 0) {
-                alert("Tu as perdu, l'adversaire a gagné !");
+                showAlert("Tu as perdu, l'adversaire a gagné !");
                 setTimeout(() => { window.location.href = "home.php"; }, 1000);
             }
 
@@ -652,7 +588,7 @@ document.querySelectorAll("#user-arena .card-slot").forEach(slot => {
                     slot.classList.add('selected');
                     selectedCards.push(card.id);
                 } else {
-                    alert('Tu ne peux sélectionner que 2 cartes pour fusionner.');
+                    showAlert('Tu ne peux sélectionner que 2 cartes pour fusionner.');
                 }
             }
         } else { // Attaque joueur
@@ -676,7 +612,7 @@ document.querySelectorAll("#user-arena .card-slot").forEach(slot => {
 
 document.getElementById('attack-monster-btn').onclick = () => {
     if (!cardToAttackWith) {
-        alert("Sélectionne d'abord ta carte pour attaquer.");
+        showAlert("Sélectionne d'abord ta carte pour attaquer.");
         return;
     }
 
@@ -684,11 +620,11 @@ document.getElementById('attack-monster-btn').onclick = () => {
         .filter(slot => slot.style.backgroundImage !== '');
 
     if (opponentArenaSlots.length === 0) {
-        alert("Aucun monstre adverse à attaquer !");
+        showAlert("Aucun monstre adverse à attaquer !");
         return;
     }
 
-    alert("Choisis le monstre adverse à attaquer.");
+    showAlert("Choisis le monstre adverse à attaquer.");
 
     enAttaque = true;
 };
@@ -697,7 +633,7 @@ document.getElementById('attack-monster-btn').addEventListener('click', () => {
     if(joueurActuel !== 'opponent') return;
 
     if (!opponentCardToAttackWith) {
-        alert("Sélectionne d'abord la carte adverse pour attaquer.");
+        showAlert("Sélectionne d'abord la carte adverse pour attaquer.");
         return;
     }
 
@@ -705,23 +641,23 @@ document.getElementById('attack-monster-btn').addEventListener('click', () => {
         .filter(slot => slot.style.backgroundImage !== '');
 
     if (userArenaSlots.length === 0) {
-        alert("Aucun monstre à attaquer dans l'arène adverse !");
+        showAlert("Aucun monstre à attaquer dans l'arène adverse !");
         return;
     }
 
-    alert("Choisis le monstre à attaquer dans l'arène adverse.");
+    showAlert("Choisis le monstre à attaquer dans l'arène adverse.");
 
     enAttaqueOpponent = true;
 });
 
 document.getElementById('attack-pv-btn').onclick = () => {
     if (joueurActuel !== 'user') {
-        alert("Ce n'est pas ton tour !");
+        showAlert("Ce n'est pas ton tour !");
         return;
     }
 
     if (!cardToAttackWith) {
-        alert("Sélectionne d'abord ta carte pour attaquer directement les PV.");
+        showAlert("Sélectionne d'abord ta carte pour attaquer directement les PV.");
         return;
     }
 
@@ -729,13 +665,13 @@ document.getElementById('attack-pv-btn').onclick = () => {
         .filter(slot => slot.style.backgroundImage !== '');
 
     if (opponentArenaSlots.length !== 0) {
-        alert("Tu ne peux pas attaquer directement les PV tant que l'ennemi a des monstres dans son arène.");
+        showAlert("Tu ne peux pas attaquer directement les PV tant que l'ennemi a des monstres dans son arène.");
         return;
     }
 
     opponentPV -= cardToAttackWith.attaque;
     document.getElementById('opponent-life').textContent = opponentPV;
-    alert(`Tu as attaqué directement l'adversaire avec "${cardToAttackWith.nom}" et infligé ${cardToAttackWith.attaque} dégâts !`);
+    showAlert(`Tu as attaqué directement l'adversaire avec "${cardToAttackWith.nom}" et infligé ${cardToAttackWith.attaque} dégâts !`);
 
     cardToAttackWith = null;
     canAttackThisTurn = false;
@@ -743,7 +679,7 @@ document.getElementById('attack-pv-btn').onclick = () => {
     document.querySelectorAll(".card-slot.selected").forEach(s => s.classList.remove('selected'));
 
     if (opponentPV <= 0) {
-        alert("Bravo ! Tu as gagné la partie !");
+        showAlert("Bravo ! Tu as gagné la partie !");
         setTimeout(() => { window.location.href = "home.php"; }, 1000);
     }
 };
@@ -752,7 +688,7 @@ document.getElementById('attack-pv-btn').addEventListener('click', () => {
     if (joueurActuel !== 'opponent') return;
 
     if (!opponentCardToAttackWith) {
-        alert("Sélectionne d'abord une carte pour attaquer directement les PV.");
+        showAlert("Sélectionne d'abord une carte pour attaquer directement les PV.");
         return;
     }
 
@@ -760,13 +696,13 @@ document.getElementById('attack-pv-btn').addEventListener('click', () => {
         .filter(slot => slot.style.backgroundImage !== '');
 
     if (userArenaSlots.length !== 0) {
-        alert("L'adversaire ne peut pas attaquer directement tant que tu as des monstres dans ton arène !");
+        showAlert("L'adversaire ne peut pas attaquer directement tant que tu as des monstres dans ton arène !");
         return;
     }
 
     userPV -= opponentCardToAttackWith.attaque;
     document.getElementById('user-life').textContent = userPV;
-    alert(`L'adversaire t'a directement attaqué avec "${opponentCardToAttackWith.nom}" et infligé ${opponentCardToAttackWith.attaque} dégâts !`);
+    showAlert(`L'adversaire t'a directement attaqué avec "${opponentCardToAttackWith.nom}" et infligé ${opponentCardToAttackWith.attaque} dégâts !`);
 
     opponentCardToAttackWith = null;
     canAttackThisTurn = false;
@@ -774,7 +710,7 @@ document.getElementById('attack-pv-btn').addEventListener('click', () => {
     document.querySelectorAll(".card-slot.selected").forEach(s => s.classList.remove('selected'));
 
     if (userPV <= 0) {
-        alert("Tu as perdu ! L'adversaire a gagné la partie !");
+        showAlert("Tu as perdu ! L'adversaire a gagné la partie !");
         setTimeout(() => { window.location.href = "home.php"; }, 1000);
     }
 });
@@ -788,6 +724,15 @@ setInterval(() => {
         document.getElementById('attack-pv-btn').disabled = !(opponentCardToAttackWith && canAttackThisTurn);
     }
 }, 500);
+
+function showAlert(message) {
+    document.getElementById('alert-message').textContent = message;
+    document.getElementById('custom-alert').style.display = 'flex';
+}
+
+function closeAlert() {
+    document.getElementById('custom-alert').style.display = 'none';
+}
 
 </script>
 
